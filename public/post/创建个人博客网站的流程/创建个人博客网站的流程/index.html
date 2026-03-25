@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-cn" dir="ltr">
+    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="首先，创建自己的网站分为动态和静态两种\n动态网站：动态网站是指需要服务器端运行的网站，用户访问时需要服务器端处理，生成动态页面。动态网站通常使用PHP、Node.js、Python等后端语言编写，可以部署在Heroku、AWS、Azure等云平台。\n流程基本可以概括如下：\n1：准备好一个域名。\n2：购买一台服务器，在阿里云和腾讯云等平台购买,个人博客的话轻量级服务器就足够了，注册和登录后，完成实名认证（个人 / 企业均可），进入「轻量应用服务器」控制台，点击「新建」\n3：服务器基础配置\n进入服务器实例详情页，记录公网 IP、管理员密码（忘记可在控制台重置）；\n开放端口：在「防火墙」标签页，添加规则开放 80、443、8888 端口（宝塔面板必备）；\n重置 root 密码（可选，确保登录安全）。\n4：安装与配置宝塔面板\n方式 1：一键镜像安装（推荐，新手首选）\n进入实例「应用管理」页签，找到「宝塔 Linux 面板」，点击「访问」；\n复制面板登录地址（如http://公网IP:8888/随机字符串）、用户名、密码；\n浏览器访问登录地址，首次登录需绑定宝塔账号，按提示完成初始化；\n面板设置：修改默认用户名、密码、面板端口（建议改为非 8888 的常用端口，提升安全）。\n方式 2：手动安装（无镜像时使用）\n用 SSH 工具（如 FinalShell、Xshell）连接服务器：\n主机：公网 IP，端口：22，用户名：root，密码：重置后的 root 密码；\n执行安装命令（以 Ubuntu 系统为例，CentOS 需换对应命令）：\n运行\nwget -O install_panel.sh https://download.bt.cn/install/install_panel.sh &amp;&amp; sudo bash install_panel.sh ed8484bec 输入y确认安装，等待 5-10 分钟，记录面板登录信息。\n五、搭建博客环境与部署\n宝塔面板左侧「软件商店」，搜索安装「LNMP」套件（Nginx+PHP+MySQL，适合 WordPress）；\n左侧「网站」→「添加站点」，填写：\n域名：你的博客域名（如xxx.com，需先解析到公网 IP）；\n数据库：选择 MySQL，设置用户名、密码；\n其他默认，提交。\n安装博客程序（以 WordPress 为例）：\n宝塔「软件商店」搜索「WordPress」，一键安装到站点目录；\n访问http://你的域名/wp-admin，按提示完成博客配置（设置标题、账号、密码）。\n六、域名解析与 ICP 备案\n">
+<title>创建个人博客网站的流程</title>
+
+
+<link rel="canonical" href="http://localhost:1313/post/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.389e156f5e9bb13df5a924cfa99dfb9c39f3e01e68d9e146cd65bdae963be145.css"><meta property='og:title' content="创建个人博客网站的流程">
+<meta property='og:description' content="首先，创建自己的网站分为动态和静态两种\n动态网站：动态网站是指需要服务器端运行的网站，用户访问时需要服务器端处理，生成动态页面。动态网站通常使用PHP、Node.js、Python等后端语言编写，可以部署在Heroku、AWS、Azure等云平台。\n流程基本可以概括如下：\n1：准备好一个域名。\n2：购买一台服务器，在阿里云和腾讯云等平台购买,个人博客的话轻量级服务器就足够了，注册和登录后，完成实名认证（个人 / 企业均可），进入「轻量应用服务器」控制台，点击「新建」\n3：服务器基础配置\n进入服务器实例详情页，记录公网 IP、管理员密码（忘记可在控制台重置）；\n开放端口：在「防火墙」标签页，添加规则开放 80、443、8888 端口（宝塔面板必备）；\n重置 root 密码（可选，确保登录安全）。\n4：安装与配置宝塔面板\n方式 1：一键镜像安装（推荐，新手首选）\n进入实例「应用管理」页签，找到「宝塔 Linux 面板」，点击「访问」；\n复制面板登录地址（如http://公网IP:8888/随机字符串）、用户名、密码；\n浏览器访问登录地址，首次登录需绑定宝塔账号，按提示完成初始化；\n面板设置：修改默认用户名、密码、面板端口（建议改为非 8888 的常用端口，提升安全）。\n方式 2：手动安装（无镜像时使用）\n用 SSH 工具（如 FinalShell、Xshell）连接服务器：\n主机：公网 IP，端口：22，用户名：root，密码：重置后的 root 密码；\n执行安装命令（以 Ubuntu 系统为例，CentOS 需换对应命令）：\n运行\nwget -O install_panel.sh https://download.bt.cn/install/install_panel.sh &amp;&amp; sudo bash install_panel.sh ed8484bec 输入y确认安装，等待 5-10 分钟，记录面板登录信息。\n五、搭建博客环境与部署\n宝塔面板左侧「软件商店」，搜索安装「LNMP」套件（Nginx+PHP+MySQL，适合 WordPress）；\n左侧「网站」→「添加站点」，填写：\n域名：你的博客域名（如xxx.com，需先解析到公网 IP）；\n数据库：选择 MySQL，设置用户名、密码；\n其他默认，提交。\n安装博客程序（以 WordPress 为例）：\n宝塔「软件商店」搜索「WordPress」，一键安装到站点目录；\n访问http://你的域名/wp-admin，按提示完成博客配置（设置标题、账号、密码）。\n六、域名解析与 ICP 备案\n">
+<meta property='og:url' content='http://localhost:1313/post/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/'>
+<meta property='og:site_name' content='我的技术博客'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2026-03-25T19:14:44&#43;08:00'/><meta property='article:modified_time' content='2026-03-25T19:14:44&#43;08:00'/>
+<meta name="twitter:title" content="创建个人博客网站的流程">
+<meta name="twitter:description" content="首先，创建自己的网站分为动态和静态两种\n动态网站：动态网站是指需要服务器端运行的网站，用户访问时需要服务器端处理，生成动态页面。动态网站通常使用PHP、Node.js、Python等后端语言编写，可以部署在Heroku、AWS、Azure等云平台。\n流程基本可以概括如下：\n1：准备好一个域名。\n2：购买一台服务器，在阿里云和腾讯云等平台购买,个人博客的话轻量级服务器就足够了，注册和登录后，完成实名认证（个人 / 企业均可），进入「轻量应用服务器」控制台，点击「新建」\n3：服务器基础配置\n进入服务器实例详情页，记录公网 IP、管理员密码（忘记可在控制台重置）；\n开放端口：在「防火墙」标签页，添加规则开放 80、443、8888 端口（宝塔面板必备）；\n重置 root 密码（可选，确保登录安全）。\n4：安装与配置宝塔面板\n方式 1：一键镜像安装（推荐，新手首选）\n进入实例「应用管理」页签，找到「宝塔 Linux 面板」，点击「访问」；\n复制面板登录地址（如http://公网IP:8888/随机字符串）、用户名、密码；\n浏览器访问登录地址，首次登录需绑定宝塔账号，按提示完成初始化；\n面板设置：修改默认用户名、密码、面板端口（建议改为非 8888 的常用端口，提升安全）。\n方式 2：手动安装（无镜像时使用）\n用 SSH 工具（如 FinalShell、Xshell）连接服务器：\n主机：公网 IP，端口：22，用户名：root，密码：重置后的 root 密码；\n执行安装命令（以 Ubuntu 系统为例，CentOS 需换对应命令）：\n运行\nwget -O install_panel.sh https://download.bt.cn/install/install_panel.sh &amp;&amp; sudo bash install_panel.sh ed8484bec 输入y确认安装，等待 5-10 分钟，记录面板登录信息。\n五、搭建博客环境与部署\n宝塔面板左侧「软件商店」，搜索安装「LNMP」套件（Nginx+PHP+MySQL，适合 WordPress）；\n左侧「网站」→「添加站点」，填写：\n域名：你的博客域名（如xxx.com，需先解析到公网 IP）；\n数据库：选择 MySQL，设置用户名、密码；\n其他默认，提交。\n安装博客程序（以 WordPress 为例）：\n宝塔「软件商店」搜索「WordPress」，一键安装到站点目录；\n访问http://你的域名/wp-admin，按提示完成博客配置（设置标题、账号、密码）。\n六、域名解析与 ICP 备案\n">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column compact"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">我的技术博客</a></h1>
+            <h2 class="site-description"></h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/%E5%88%9B%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E6%B5%81%E7%A8%8B/">创建个人博客网站的流程</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-25T19:14:44&#43;08:00'>Wednesday, March 25, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <p>首先，创建自己的网站分为动态和静态两种</p>
+<p><strong>动态网站</strong>：动态网站是指需要服务器端运行的网站，用户访问时需要服务器端处理，生成动态页面。动态网站通常使用PHP、Node.js、Python等后端语言编写，可以部署在Heroku、AWS、Azure等云平台。</p>
+<p>流程基本可以概括如下：</p>
+<p>1：准备好一个域名。</p>
+<p>2：购买一台服务器，在阿里云和腾讯云等平台购买,个人博客的话轻量级服务器就足够了，注册和登录后，完成实名认证（个人 / 企业均可），进入「轻量应用服务器」控制台，点击「新建」</p>
+<p>3：服务器基础配置</p>
+<p>进入服务器实例详情页，记录公网 IP、管理员密码（忘记可在控制台重置）；</p>
+<p>开放端口：在「防火墙」标签页，添加规则开放 80、443、8888 端口（宝塔面板必备）；</p>
+<p>重置 root 密码（可选，确保登录安全）。</p>
+<p>4：安装与配置宝塔面板</p>
+<p>方式 1：一键镜像安装（推荐，新手首选）</p>
+<p>进入实例「应用管理」页签，找到「宝塔 Linux 面板」，点击「访问」；</p>
+<p>复制面板登录地址（如http://公网IP:8888/随机字符串）、用户名、密码；</p>
+<p>浏览器访问登录地址，首次登录需绑定宝塔账号，按提示完成初始化；</p>
+<p>面板设置：修改默认用户名、密码、面板端口（建议改为非 8888 的常用端口，提升安全）。</p>
+<p>方式 2：手动安装（无镜像时使用）</p>
+<p>用 SSH 工具（如 FinalShell、Xshell）连接服务器：</p>
+<p>主机：公网 IP，端口：22，用户名：root，密码：重置后的 root 密码；</p>
+<p>执行安装命令（以 Ubuntu 系统为例，CentOS 需换对应命令）：</p>
+<p>运行</p>
+<pre tabindex="0"><code>wget -O install_panel.sh https://download.bt.cn/install/install_panel.sh &amp;&amp; sudo bash install_panel.sh ed8484bec
+</code></pre><p>输入y确认安装，等待 5-10 分钟，记录面板登录信息。</p>
+<p>五、搭建博客环境与部署</p>
+<p>宝塔面板左侧「软件商店」，搜索安装「LNMP」套件（Nginx+PHP+MySQL，适合 WordPress）；</p>
+<p>左侧「网站」→「添加站点」，填写：</p>
+<p>域名：你的博客域名（如xxx.com，需先解析到公网 IP）；</p>
+<p>数据库：选择 MySQL，设置用户名、密码；</p>
+<p>其他默认，提交。</p>
+<p>安装博客程序（以 WordPress 为例）：</p>
+<p>宝塔「软件商店」搜索「WordPress」，一键安装到站点目录；</p>
+<p>访问<code>http://你的域名/wp-admin</code>，按提示完成博客配置（设置标题、账号、密码）。</p>
+<p>六、域名解析与 ICP 备案</p>
+<p>域名解析：进入域名服务商控制台，添加 A 记录，将域名指向服务器公网 IP；</p>
+<p>ICP 备案：腾讯云 / 阿里云控制台进入「备案」模块，按提示提交资料（域名、身份证、服务器信息），等待审核通过后，博客即可正常访问。</p>
+<p>七、安全与优化（可选）</p>
+<p>宝塔「安全」模块：开启防火墙、暴力破解防护，设置 IP 白名单；</p>
+<p>配置 HTTPS：宝塔「网站→SSL」，申请免费 Let&rsquo;s Encrypt 证书，强制 HTTPS 访问；</p>
+<p>博客优化：安装缓存插件（如 WP Rocket）、优化图片，提升访问速度。</p>
+<p>阿里云通用注意事项</p>
+<p>配置与腾讯云一致，镜像同样可选「宝塔 Linux 面板」，购买时注意地域与时长；</p>
+<p>阿里云秒杀款（38 元 / 年）需每日 10 点 / 15 点抢购，限购 1 台；</p>
+<p>备案流程与腾讯云一致，优先选官方备案通道，确保合规。</p>
+<p>常见问题与避坑</p>
+<p>宝塔面板无法访问：检查防火墙是否开放 8888 端口，确认服务器公网 IP 正确；</p>
+<p>博客访问慢：选就近地域服务器，开启 CDN（腾讯云 / 阿里云免费 CDN）；</p>
+<p>环境冲突：宝塔安装前确保系统纯净，无其他 Web 环境（如 Apache、Nginx）</p>
+<p><strong>静态网站</strong>：静态网站是指不需要服务器端运行的网站，所有的内容都是预先写好的，用户访问时直接从服务器上下载静态页面，不需要服务器端进行处理。静态网站通常使用HTML、CSS和JavaScript等前端技术编写，可以部署在GitHub Pages、Netlify、Vercel等平台上。</p>
+<p>流程基本可以概括如下：</p>
+<ol>
+<li>注册账号
+GitHub：<code>https://github.com</code>（免费，存代码）
+Cloudflare：<code>https://dash.cloudflare.com</code>（免费，托管 + 加速）
+域名：阿里云 / 腾讯云买一个</li>
+<li>本地安装 Hugo（Windows/macOS）
+Windows
+下载：<code>https://github.com/gohugoio/hugo/releases</code>
+（选 hugo_extended_xxx_windows-amd64.zip）
+解压到 C:\hugo
+把 C:\hugo 加入系统 环境变量 PATH
+打开 CMD 验证：hugo version（出现版本号即成功）
+macOS
+运行
+<code>brew install hugo</code>
+<code>hugo version</code>
+二、本地创建 Hugo 博客（5 分钟）
+初始化站点</li>
+</ol>
+<pre tabindex="0"><code>hugo new site myblog
+cd myblog
+</code></pre><p>安装主题（以 Ananke 为例）
+运行
+git submodule add <a class="link" href="https://github.com/theNewDynamic/gohugo-theme-ananke.git"  target="_blank" rel="noopener"
+    >https://github.com/theNewDynamic/gohugo-theme-ananke.git</a> themes/ananke</p>
+<ol>
+<li>修改配置 hugo.toml
+toml
+baseURL = &ldquo;https://你的域名.com&rdquo;
+languageCode = &ldquo;zh-CN&rdquo;
+title = &ldquo;我的博客&rdquo;
+theme = &ldquo;ananke&rdquo;</li>
+<li>写第一篇文章
+运行
+hugo new posts/hello-world.md
+打开 content/posts/hello-world.md，用 Markdown 写内容。</li>
+<li>本地预览
+运行
+hugo server
+访问：http://localhost:1313（没问题再下一步）
+三、上传到 GitHub（5 分钟）</li>
+<li>GitHub 新建仓库
+仓库名：myblog（随便）
+公开 / 私有均可
+不勾选 README、LICENSE、.gitignore</li>
+<li>本地推送到 GitHub
+运行
+git init
+git add .
+git commit -m &ldquo;first commit&rdquo;
+git branch -M main
+git remote add origin <a class="link" href="https://github.com/"  target="_blank" rel="noopener"
+    >https://github.com/</a>你的用户名/myblog.git
+git push -u origin main
+四、Cloudflare Pages 自动部署（10 分钟）</li>
+<li>登录 Cloudflare → Workers &amp; Pages → Create application</li>
+<li>选择 Pages → Connect to Git → 授权 GitHub</li>
+<li>选择你的 myblog 仓库 → Begin setup</li>
+<li>构建设置（直接抄）
+Framework preset：选 Hugo
+Production branch：main
+Build command：hugo
+Build output directory：public
+Environment variables（必加，否则 Hugo 版本不对）
+名称：HUGO_VERSION
+值：0.123.0（用最新稳定版）
+点击 Save and Deploy</li>
+<li>等待部署（1-2 分钟）
+成功后会给你一个测试域名：https://myblog.pages.dev（国内访问一般，后面绑自己域名）
+五、绑定自定义域名（国内秒开，关键）</li>
+<li>把域名 DNS 托管到 Cloudflare（必须）
+Cloudflare → Add a Site → 输入你的域名 → 选 Free Plan
+Cloudflare 给你 2 个 NS 地址（如 xxx.ns.cloudflare.com、yyy.ns.cloudflare.com）
+去你的域名服务商（阿里云 / 腾讯云）：
+找到域名 → 管理 → DNS 服务器 / Nameservers
+删除原有 NS，填入 Cloudflare 给的 2 个
+保存（生效 5-30 分钟）</li>
+<li>Cloudflare Pages 绑定域名
+进入 Pages 项目 → Custom domains → Set up a domain
+输入你的域名（如 你的域名.com）→ Continue
+Cloudflare 自动生成 CNAME 记录（确认代理是 橙色云）
+点击 Activate domain
+等待 1-5 分钟 → 显示 Active 即成功</li>
+<li>验证
+浏览器打开 https://你的域名.com → 国内秒开、HTTPS 自动生效</li>
+</ol>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 我的技术博客
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.4186696541790ca2b7756c4b2ba4a97389d7cb2d86672566aee8ba0211b23871.js" defer></script>
+
+
+    </body>
+</html>
