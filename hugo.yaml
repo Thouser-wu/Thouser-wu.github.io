@@ -1,0 +1,19 @@
+baseURL: "https://thouser.pages.dev/"
+languageCode: "zh-cn"
+title: "我的技术博客"
+# theme: "PaperMod"
+theme: "hugo-theme-stack"
+
+outputFormats:
+  HTML:
+    mediaType: "text/html"
+    isPlainText: false
+    isHTML: true
+
+outputs:
+  home: ["HTML", "RSS", "JSON"]
+
+params:
+  defaultTheme: "auto" # 主题模式：auto, light, dark
+  mainSections: "post" 
+  # 其他详细配置可后续在 params 下添加，参考主题Wiki
