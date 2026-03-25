@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on 我的技术博客</title>
+        <link>http://localhost:1313/post/</link>
+        <description>Recent content in Posts on 我的技术博客</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>zh-cn</language>
+        <lastBuildDate>Wed, 25 Mar 2026 09:30:22 +0800</lastBuildDate><atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>我的第一篇文章</title>
+            <link>http://localhost:1313/post/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</link>
+            <pubDate>Wed, 25 Mar 2026 09:30:22 +0800</pubDate>
+            <guid>http://localhost:1313/post/%E6%88%91%E7%9A%84%E7%AC%AC%E4%B8%80%E7%AF%87%E6%96%87%E7%AB%A0/</guid>
+            <description>&lt;h2 id=&#34;欢迎来到我的博客&#34;&gt;欢迎来到我的博客！&#xD;&#xA;&lt;/h2&gt;&lt;p&gt;你好呀，我是Thouser&lt;/p&gt;&#xA;</description>
+        </item></channel>
+</rss>
