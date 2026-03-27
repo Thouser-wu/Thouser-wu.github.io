@@ -1,19 +1,84 @@
 baseURL: "https://thouser.pages.dev/"
 languageCode: "zh-cn"
-title: "我的技术博客"
-# theme: "PaperMod"
-theme: "hugo-theme-stack"
-
-outputFormats:
-  HTML:
-    mediaType: "text/html"
-    isPlainText: false
-    isHTML: true
-
-outputs:
-  home: ["HTML", "RSS", "JSON"]
+title: "Thouser的技术博客"
+theme: "PaperMod"
 
 params:
-  defaultTheme: "auto" # 主题模式：auto, light, dark
-  mainSections: "post" 
-  # 其他详细配置可后续在 params 下添加，参考主题Wiki
+  env: production # to enable google analytics, search, etc.
+  title: "Thouser的技术博客"
+  description: "记录技术与生活的点滴"
+  keywords: [Blog, Tech, Java, Vue]
+  author: "Thouser"
+  DateFormat: "2006-01-02"
+  defaultTheme: auto # dark, light, auto
+  disableThemeToggle: false
+
+  ShowReadingTime: true
+  ShowShareButtons: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowWordCount: true
+  ShowFullTextContent: ture
+  comments: false
+  hidemenu: false
+  showtoc: true
+  tocopen: false
+
+  profileMode:
+    enabled: true # needs to be true for profile mode
+    title: "Thouser"
+    subtitle: "我是Thouser，欢迎来到我的技术博客！"
+    displayFullContent: true
+    imageUrl: "/img/1.jpg"
+    imageWidth: 120
+    imageHeight: 120
+    imageTitle: "Thouser"
+    buttons:
+      - name: 文章
+        url: post
+      - name: 标签
+        url: tags
+
+  socialIcons:
+    - name: github
+      url: "https://github.com/Thouser-wu"
+
+  editPost:
+    URL: "https://github.com/Thouser-wu/myblog/content"
+    Text: "Suggest Changes" # edit text
+    appendFilePath: true # to append file path to Edit link
+
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 100
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys: ["title", "permalink", "summary", "content"]
+
+menu:
+  main:
+    - identifier: archives
+      name: 归档
+      url: archives
+      weight: 10
+    - identifier: search
+      name: 搜索
+      url: search
+      weight: 20
+    - identifier: categories
+      name: 分类
+      url: categories
+      weight: 30
+    - identifier: tags
+      name: 标签
+      url: tags
+      weight: 40
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON # for search
