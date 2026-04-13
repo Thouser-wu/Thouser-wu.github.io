@@ -68,7 +68,6 @@ rm -rf /var/lib/docker
 
 ```bash
 yum list installed | grep docker
-# 注意：原文中 "docker list installed" 有误，应为 yum 或 rpm 命令
 ```
 
 4. **删除依赖包**:
@@ -127,7 +126,7 @@ docker image prune
 ```bash
 docker commit -m "<描述信息>" -a "<作者名字>" <容器ID> <新镜像名>:<标签>
 # 示例:
-docker commit -m="add vim" -a="wujunze" 65a4b2521717 centos-with-vim:1.0.0
+docker commit -m="add vim" -a="name" 65a4b2521717 centos-with-vim:1.0.0
 ```
 
 > **注意**: `docker commit` 是手动创建镜像的方式，可重复性弱且难以审计。生产环境建议使用 `Dockerfile` 构建。
