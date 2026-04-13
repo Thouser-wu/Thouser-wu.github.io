@@ -44,10 +44,10 @@ params:
     - name: github
       url: "https://github.com/Thouser-wu"
 
-  editPost:
-    URL: "https://github.com/Thouser-wu/myblog/content"
-    Text: "Suggest Changes" # edit text
-    appendFilePath: true # to append file path to Edit link
+  # editPost:
+  #   URL: "https://github.com/Thouser-wu/myblog/content"
+  #   Text: "Suggest Changes" # edit text
+  #   appendFilePath: true # to append file path to Edit link
 
   fuseOpts:
     isCaseSensitive: false
