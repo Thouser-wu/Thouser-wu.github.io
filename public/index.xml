@@ -6,8 +6,71 @@
     <description>Recent content on Thouser的技术博客</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 26 Mar 2026 08:43:23 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 20 Apr 2026 17:47:31 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>计算机中原码、反码、补码、移码总结</title>
+      <link>http://localhost:1313/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA/</link>
+      <pubDate>Mon, 20 Apr 2026 17:47:31 +0800</pubDate>
+      <guid>http://localhost:1313/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA/</guid>
+      <description>&lt;h1 id=&#34;计算机中原码反码补码移码总结&#34;&gt;计算机中原码、反码、补码、移码总结&lt;/h1&gt;
+&lt;h2 id=&#34;一基本概念&#34;&gt;一、基本概念&lt;/h2&gt;
+&lt;p&gt;在计算机中，分为有符号数和无符号数，&lt;strong&gt;有符号整数&lt;/strong&gt;通常用最高位表示符号位：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;0&lt;/code&gt; 表示正数&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;1&lt;/code&gt; 表示负数
+以下均以 &lt;strong&gt;n 位二进制&lt;/strong&gt;为例（含 1 位符号位）。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;二原码true-form&#34;&gt;二、原码（True Form）&lt;/h2&gt;
+&lt;h3 id=&#34;定义&#34;&gt;定义&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;最高位为符号位，其余位为数值的&lt;strong&gt;绝对值二进制&lt;/strong&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;计算规则&#34;&gt;计算规则&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;正数：符号位 &lt;code&gt;0&lt;/code&gt;，数值位不变&lt;/li&gt;
+&lt;li&gt;负数：符号位 &lt;code&gt;1&lt;/code&gt;，数值位不变&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;特点&#34;&gt;特点&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;表示直观，符合人类阅读习惯&lt;/li&gt;
+&lt;li&gt;0 有两种表示：&lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt;，因此取值范围为 &lt;code&gt;[-2^(n-1), 2^(n-1)-1]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;减法运算复杂，计算机不直接用原码做加减&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;示例8-位&#34;&gt;示例（8 位）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;+5&lt;/code&gt; → &lt;code&gt;0000 0101&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-5&lt;/code&gt; → &lt;code&gt;1000 0101&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+0&lt;/code&gt; → &lt;code&gt;0000 0000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-0&lt;/code&gt; → &lt;code&gt;1000 0000&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;三反码ones-complement&#34;&gt;三、反码（One&amp;rsquo;s Complement）&lt;/h2&gt;
+&lt;h3 id=&#34;定义-1&#34;&gt;定义&lt;/h3&gt;
+&lt;p&gt;原码的基础上，&lt;strong&gt;负数按位取反&lt;/strong&gt;，正数不变。&lt;/p&gt;
+&lt;h3 id=&#34;计算规则-1&#34;&gt;计算规则&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;正数：反码 = 原码&lt;/li&gt;
+&lt;li&gt;负数：符号位不变，数值位&lt;strong&gt;逐位取反&lt;/strong&gt;（0↔1）&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;特点-1&#34;&gt;特点&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;只是过渡编码，主要用于求补码&lt;/li&gt;
+&lt;li&gt;同样存在 &lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt; 两种表示&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id=&#34;示例8-位-1&#34;&gt;示例（8 位）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;+5&lt;/code&gt; → &lt;code&gt;0000 0101&lt;/code&gt;（与原码相同）&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-5&lt;/code&gt; → &lt;code&gt;1111 1010&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+0&lt;/code&gt; → &lt;code&gt;0000 0000&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;-0&lt;/code&gt; → &lt;code&gt;1111 1111&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;四补码twos-complement&#34;&gt;四、补码（Two&amp;rsquo;s Complement）&lt;/h2&gt;
+&lt;h3 id=&#34;定义-2&#34;&gt;定义&lt;/h3&gt;
+&lt;p&gt;计算机&lt;strong&gt;实际存储和运算&lt;/strong&gt;使用的编码。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Mysql常用指令</title>
       <link>http://localhost:1313/post/mysql%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/</link>

@@ -159,6 +159,21 @@
 
 <article class="post-entry"> 
   <header class="entry-header">
+    <h2 class="entry-hint-parent">计算机中原码、反码、补码、移码总结
+    </h2>
+  </header>
+  <div class="entry-content">
+    <p>计算机中原码、反码、补码、移码总结 一、基本概念 在计算机中，分为有符号数和无符号数，有符号整数通常用最高位表示符号位：
+0 表示正数 1 表示负数 以下均以 n 位二进制为例（含 1 位符号位）。 二、原码（True Form） 定义 最高位为符号位，其余位为数值的绝对值二进制。 计算规则 正数：符号位 0，数值位不变 负数：符号位 1，数值位不变 特点 表示直观，符合人类阅读习惯 0 有两种表示：&#43;0 和 -0，因此取值范围为 [-2^(n-1), 2^(n-1)-1] 减法运算复杂，计算机不直接用原码做加减 示例（8 位） &#43;5 → 0000 0101 -5 → 1000 0101 &#43;0 → 0000 0000 -0 → 1000 0000 三、反码（One’s Complement） 定义 原码的基础上，负数按位取反，正数不变。
+计算规则 正数：反码 = 原码 负数：符号位不变，数值位逐位取反（0↔1） 特点 只是过渡编码，主要用于求补码 同样存在 &#43;0 和 -0 两种表示 示例（8 位） &#43;5 → 0000 0101（与原码相同） -5 → 1111 1010 &#43;0 → 0000 0000 -0 → 1111 1111 四、补码（Two’s Complement） 定义 计算机实际存储和运算使用的编码。
+...</p>
+  </div>
+  <footer class="entry-footer"><span title='2026-04-20 17:47:31 +0800 CST'>2026-04-20</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>203 words</span>&nbsp;·&nbsp;<span>Thouser</span></footer>
+  <a class="entry-link" aria-label="post link to 计算机中原码、反码、补码、移码总结" href="http://localhost:1313/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA/"></a>
+</article>
+
+<article class="post-entry"> 
+  <header class="entry-header">
     <h2 class="entry-hint-parent">Mysql常用指令
     </h2>
   </header>
