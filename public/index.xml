@@ -6,8 +6,76 @@
     <description>Recent content on Thouser的技术博客</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 20 Apr 2026 17:47:31 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 13 May 2026 19:20:33 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>软件避免安装C盘</title>
+      <link>http://localhost:1313/post/%E8%BD%AF%E4%BB%B6%E9%81%BF%E5%85%8D%E5%AE%89%E8%A3%85c%E7%9B%98/</link>
+      <pubDate>Wed, 13 May 2026 19:20:33 +0800</pubDate>
+      <guid>http://localhost:1313/post/%E8%BD%AF%E4%BB%B6%E9%81%BF%E5%85%8D%E5%AE%89%E8%A3%85c%E7%9B%98/</guid>
+      <description>&lt;h1 id=&#34;软件避免安装c盘ollama避c盘完整安装迁移教程&#34;&gt;软件避免安装C盘，Ollama避C盘完整安装迁移教程&lt;/h1&gt;
+&lt;h2 id=&#34;一c盘爆红意味着什么&#34;&gt;一、C盘爆红意味着什么&lt;/h2&gt;
+&lt;h3 id=&#34;1-c盘爆红的含义&#34;&gt;1. C盘爆红的含义&lt;/h3&gt;
+&lt;p&gt;C盘是电脑&lt;strong&gt;系统盘&lt;/strong&gt;，承载Windows系统文件、系统缓存、注册表、用户配置、软件默认安装目录、模型缓存、日志文件等核心数据。
+C盘爆红，就是C盘存储空间即将占满、剩余空间严重不足，本质是&lt;strong&gt;系统盘资源被各类软件、缓存、大模型文件过度挤占&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&#34;2-软件全装c盘的后果&#34;&gt;2. 软件全装C盘的后果&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;电脑严重卡顿、开机变慢&lt;/strong&gt;
+系统运行、虚拟内存读写都依赖C盘剩余空间，C盘爆满后虚拟内存无法正常调度，打开软件、切换窗口、开机进系统都会明显卡顿，甚至鼠标拖动都有延迟。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;系统更新失败、功能异常&lt;/strong&gt;
+Windows自动更新、系统补丁安装需要占用C盘临时空间，空间不足会直接更新失败；还会出现应用闪退、弹窗报错、自带工具无法打开等问题。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;重装系统数据全丢失&lt;/strong&gt;
+一旦系统崩溃需要重装，默认会格式化C盘。所有装在C盘的软件、模型文件、配置数据会直接清空，无法找回，迁移成本极高。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;软件臃肿堆积、难以清理&lt;/strong&gt;
+多数软件默认把缓存、日志、离线资源存在C盘用户目录，日积月累产生大量隐形垃圾；手动清理容易误删系统文件，导致系统损坏。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;&lt;strong&gt;大模型软件直接撑爆C盘&lt;/strong&gt;
+像Ollama、AI绘图、本地大模型这类软件，&lt;strong&gt;单个模型动辄几GB甚至几十GB&lt;/strong&gt;，默认自动存C盘，装两三个模型就会直接把C盘撑红，这也是很多人C盘莫名爆红的主要原因。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;二以ollama为例默认装c盘的坑&#34;&gt;二、以Ollama为例：默认装C盘的坑&lt;/h2&gt;
+&lt;p&gt;Ollama是本地大模型运行工具，很多新手习惯用官方一键命令安装：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;irm https&lt;span style=&#34;color:#960050;background-color:#1e0010&#34;&gt;:&lt;/span&gt;//ollama.com/install/windows | iex
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;这个命令&lt;strong&gt;强制默认安装到C盘&lt;/strong&gt;，不仅程序本体占用C盘，后续&lt;code&gt;ollama pull&lt;/code&gt;下载的所有大模型，都会自动存到C盘用户隐藏目录。&lt;/p&gt;
+&lt;p&gt;弊端非常明显：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;程序占用C盘程序空间，日积月累更新扩容越占越多；&lt;/li&gt;
+&lt;li&gt;大模型文件体积巨大，几个模型就能直接把C盘占满；&lt;/li&gt;
+&lt;li&gt;后期想迁移极其麻烦，不设置环境变量还会重复下载模型。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;三还没装ollama全新安装全程避开c盘&#34;&gt;三、还没装Ollama：全新安装，全程避开C盘&lt;/h2&gt;
+&lt;h3 id=&#34;1-官方下载安装包&#34;&gt;1. 官方下载安装包&lt;/h3&gt;
+&lt;p&gt;浏览器访问下载地址，手动下载安装包：
+&lt;a href=&#34;https://ollama.com/download/windows&#34;&gt;https://ollama.com/download/windows&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;将 &lt;code&gt;OllamaSetup.exe&lt;/code&gt; 放到 &lt;code&gt;D:\安装包&lt;/code&gt; 这类非C盘目录备用。&lt;/p&gt;
+&lt;h3 id=&#34;2-powershell管理员安装到d盘&#34;&gt;2. PowerShell管理员安装到D盘&lt;/h3&gt;
+&lt;p&gt;以&lt;strong&gt;管理员身份&lt;/strong&gt;打开PowerShell，依次执行以下命令：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 1. 在D盘创建Ollama安装目录&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir D:\ollama
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 2. 切换到安装包存放目录（自行改成你的实际路径）&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;cd D:\安装包
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 3. 指定安装路径，直接安装到D盘，不占用C盘&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;.\OllamaSetup.exe /DIR=&lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;D:\ollama&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;执行完成后，Ollama程序本体直接安装在 &lt;code&gt;D:\ollama&lt;/code&gt;，完全脱离C盘。&lt;/p&gt;
+&lt;h3 id=&#34;3-设置模型存储到d盘最关键步骤&#34;&gt;3. 设置模型存储到D盘（最关键步骤）&lt;/h3&gt;
+&lt;p&gt;模型是占用空间大户，单独配置目录彻底杜绝C盘爆满：&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 1. 在D盘创建模型专属文件夹&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;mkdir D:\ollama\models
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 2. 设置系统环境变量，永久指定模型存放路径&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;setx OLLAMA_MODELS &lt;span style=&#34;color:#e6db74&#34;&gt;&amp;#34;D:\ollama\models&amp;#34;&lt;/span&gt; /M
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;重启电脑&lt;/strong&gt;生效，后续所有&lt;code&gt;ollama pull&lt;/code&gt;下载的模型，都会自动保存到D盘。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>计算机中原码、反码、补码、移码总结</title>
       <link>http://localhost:1313/post/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%95%B0%E6%8D%AE%E7%9A%84%E8%A1%A8%E7%A4%BA/</link>
@@ -35,7 +103,7 @@
 &lt;h3 id=&#34;特点&#34;&gt;特点&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;表示直观，符合人类阅读习惯&lt;/li&gt;
-&lt;li&gt;0 有两种表示：&lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt;，因此取值范围为 &lt;code&gt;[-2^(n-1), 2^(n-1)-1]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;0 有两种表示：&lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt;，取值范围为 $[-(2^{n-1}-1),\ 2^{n-1}-1]$&lt;/li&gt;
 &lt;li&gt;减法运算复杂，计算机不直接用原码做加减&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;示例8-位&#34;&gt;示例（8 位）&lt;/h3&gt;
@@ -57,7 +125,7 @@
 &lt;h3 id=&#34;特点-1&#34;&gt;特点&lt;/h3&gt;
 &lt;ol&gt;
 &lt;li&gt;只是过渡编码，主要用于求补码&lt;/li&gt;
-&lt;li&gt;同样存在 &lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt; 两种表示&lt;/li&gt;
+&lt;li&gt;同样存在 &lt;code&gt;+0&lt;/code&gt; 和 &lt;code&gt;-0&lt;/code&gt; 两种表示,取值范围为$[-(2^{n-1}-1),2^{n-1}-1]$&lt;/li&gt;
 &lt;/ol&gt;
 &lt;h3 id=&#34;示例8-位-1&#34;&gt;示例（8 位）&lt;/h3&gt;
 &lt;ul&gt;
