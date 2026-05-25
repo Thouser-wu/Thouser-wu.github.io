@@ -1,6 +1,6 @@
 +++
 date = '2026-05-25T19:51:51+08:00'
-draft = true
+draft = false
 title = 'WSL2相关指令'
 +++
 
