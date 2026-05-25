@@ -6,8 +6,93 @@
     <description>Recent content in Posts on Thouser的技术博客</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 13 May 2026 19:20:33 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 25 May 2026 19:51:51 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WSL2相关指令</title>
+      <link>http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/</link>
+      <pubDate>Mon, 25 May 2026 19:51:51 +0800</pubDate>
+      <guid>http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/</guid>
+      <description>&lt;h1 id=&#34;wsl2-相关指令&#34;&gt;WSL2 相关指令&lt;/h1&gt;
+&lt;h2 id=&#34;一前置条件&#34;&gt;一、前置条件&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;打开任务管理器 → 性能 → CPU，确认虚拟化状态为已开启；若未开启，需进入BIOS界面手动开启虚拟化功能。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt=&#34;1&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/image/index/1.png&#34;&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;任务栏搜索「启用或关闭Windows功能」，勾选以下两项：
+&lt;ul&gt;
+&lt;li&gt;适用于Linux的Windows子系统&lt;/li&gt;
+&lt;li&gt;虚拟机平台&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt=&#34;2&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/image/index/2.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;二系统安装步骤&#34;&gt;二、系统安装步骤&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;以管理员身份运行PowerShell&lt;/li&gt;
+&lt;li&gt;执行安装命令
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 常规安装&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --install
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 国内网络推荐下载方式&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --install --web-download
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;li&gt;默认安装Ubuntu系统，可执行命令查询全部可安装发行版
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --list --online
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt=&#34;3&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/image/index/3.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;(我去，要翻墙)&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;4&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/image/index/4.png&#34;&gt;&lt;/p&gt;
+&lt;h2 id=&#34;三常用操作命令&#34;&gt;三、常用操作命令&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-powershell&#34; data-lang=&#34;powershell&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 查看已安装系统及版本&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --list -v
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 设置默认启动系统&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --set-default &amp;lt;系统名称&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 切换打开指定系统&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl -d &amp;lt;系统名称&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 退出当前WSL系统&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;exit
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# Windows终端终止指定系统&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --terminate &amp;lt;系统名称&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 卸载指定Linux系统&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --unregister &amp;lt;系统名称&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 导出系统镜像&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --export &amp;lt;系统名称&amp;gt; &amp;lt;导出文件名&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;&lt;span style=&#34;color:#75715e&#34;&gt;# 导入系统镜像&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;wsl --import &amp;lt;系统名称&amp;gt; &amp;lt;导入路径&amp;gt; &amp;lt;导出文件名&amp;gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;四跨系统文件共享&#34;&gt;四、跨系统文件共享&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Linux 访问 Windows C盘&lt;/strong&gt;
+Windows C盘自动挂载至WSL路径 &lt;code&gt;/mnt/c/&lt;/code&gt;，该路径读写性能偏低，大文件建议拷贝至Linux本地目录使用。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;img alt=&#34;5&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/post/wsl2%E7%9B%B8%E5%85%B3%E6%8C%87%E4%BB%A4/image/index/5.png&#34;&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>实用指令</title>
+      <link>http://localhost:1313/post/%E5%AE%9E%E7%94%A8%E6%8C%87%E4%BB%A4/</link>
+      <pubDate>Thu, 14 May 2026 08:19:38 +0800</pubDate>
+      <guid>http://localhost:1313/post/%E5%AE%9E%E7%94%A8%E6%8C%87%E4%BB%A4/</guid>
+      <description>&lt;h3 id=&#34;1-查端口占用-pid&#34;&gt;1. 查端口占用 PID&lt;/h3&gt;
+&lt;p&gt;1:把端口号换成你要查的，比如 8080、3306&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;netstat -ano | findstr 端口号
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;输出最后一列就是 PID&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;通过 PID 查是哪个程序&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;tasklist | findstr PID号
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;ol start=&#34;3&#34;&gt;
+&lt;li&gt;强制关闭占用端口的进程&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;&#34;&gt;&lt;code class=&#34;language-cmd&#34; data-lang=&#34;cmd&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span&gt;taskkill /F /PID PID号
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
     <item>
       <title>软件避免安装C盘</title>
       <link>http://localhost:1313/post/%E8%BD%AF%E4%BB%B6%E9%81%BF%E5%85%8D%E5%AE%89%E8%A3%85c%E7%9B%98/</link>
