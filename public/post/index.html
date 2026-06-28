@@ -176,11 +176,11 @@
     </h2>
   </header>
   <div class="entry-content">
-    <p>1. 查端口占用 PID 1:把端口号换成你要查的，比如 8080、3306
-netstat -ano | findstr 端口号 输出最后一列就是 PID
-通过 PID 查是哪个程序 tasklist | findstr PID号 强制关闭占用端口的进程 taskkill /F /PID PID号 </p>
+    <p>1. 查端口占用 PID 1:把端口号换成你要查的，比如 8080、3306 netstat -ano | findstr 端口号 输出最后一列就是 PID
+通过 PID 查是哪个程序 tasklist | findstr PID号 强制关闭占用端口的进程 taskkill /F /PID PID号 2：有时候端口是被 Windows 系统保留了，不是被程序占用，报权限禁止错误，例如： (HTTP code 500) server error - ports are not available: exposing port TCP 0.0.0.0:8001 -&gt; 127.0.0.1:0: listen tcp 0.0.0.0:8001: bind: An attempt was made to access a socket in a way forbidden by its access permissions. 解决方法：以管理员身份打开 PowerShell，复制运行这 2 条命令：
+net stop winnat net start winnat </p>
   </div>
-  <footer class="entry-footer"><span title='2026-05-14 08:19:38 +0800 CST'>2026-05-14</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>24 words</span>&nbsp;·&nbsp;<span>Thouser</span></footer>
+  <footer class="entry-footer"><span title='2026-05-14 08:19:38 +0800 CST'>2026-05-14</span>&nbsp;·&nbsp;<span>1 min</span>&nbsp;·&nbsp;<span>73 words</span>&nbsp;·&nbsp;<span>Thouser</span></footer>
   <a class="entry-link" aria-label="post link to 实用指令" href="http://localhost:1313/post/%E5%AE%9E%E7%94%A8%E6%8C%87%E4%BB%A4/"></a>
 </article>
 
