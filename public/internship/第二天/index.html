@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>第二天 | Thouser的技术博客</title>
+<meta name="keywords" content="Linux, 文件系统, systemd, MySQL, supervisor">
+<meta name="description" content="文件系统、用户权限与包管理，Linux 服务、日志与进程管理">
+<meta name="author" content="Thouser">
+<link rel="canonical" href="http://localhost:1313/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.a29c24210eb31d9ce56f669c66a35c9c51b17376b7764e336a49af7dec914cf0.css" integrity="sha256-opwkIQ6zHZzlb2acZqNcnFGxc3a3dk4zakmvfeyRTPA=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script><meta property="og:url" content="http://localhost:1313/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/">
+  <meta property="og:site_name" content="Thouser的技术博客">
+  <meta property="og:title" content="第二天">
+  <meta property="og:description" content="文件系统、用户权限与包管理，Linux 服务、日志与进程管理">
+  <meta property="og:locale" content="zh_cn">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="internship">
+    <meta property="article:published_time" content="2026-07-22T00:00:00+00:00">
+    <meta property="article:modified_time" content="2026-07-22T00:00:00+00:00">
+    <meta property="article:tag" content="Linux">
+    <meta property="article:tag" content="文件系统">
+    <meta property="article:tag" content="Systemd">
+    <meta property="article:tag" content="MySQL">
+    <meta property="article:tag" content="Supervisor">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="第二天">
+  <meta name="twitter:description" content="文件系统、用户权限与包管理，Linux 服务、日志与进程管理">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "实习记录",
+      "item": "http://localhost:1313/internship/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "第二天",
+      "item": "http://localhost:1313/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "第二天",
+  "name": "第二天",
+  "description": "文件系统、用户权限与包管理，Linux 服务、日志与进程管理",
+  "keywords": [
+    "Linux", "文件系统", "systemd", "MySQL", "supervisor"
+  ],
+  "articleBody": "主题：文件系统、用户权限与包管理，Linux 服务、日志与进程管理 学习目标：掌握文件系统类型、硬/软链接、挂载、用户组、sudo/su、apt/dpkg，dnf/yum/rpm。掌握 systemd服务管理、journalctl、rsyslog以及各类系统日志文件、ps/top/kill 当日任务： 根据学习目标展开学习\n实操任务1：\n分配两个磁盘给虚拟机，一个磁盘挂载至/mnt。\n创建/mnt/repository目录，下载mysql8.0软件deb包以及相关依赖包到/mnt/repository目录下（不安装仅下载）。\n将/mnt/repository做成本地apt仓库。\n将另外一块磁盘挂载到/mnt/repository，挂载好后思考怎么在磁盘挂载的情况下使用刚刚做好的本地apt仓库安装mysql8.0\n实操任务2：\n启动mysql服务，获取到mysql服务下进程的pid。（思考拿到进程pid如何反过来查到进程所属服务）\n创建一个自定义systemd服务，服务能够实现定时每1个小时备份一次mysql的配置文件（思考其他实现方式）\n安装学习supervisor工具，并思考supervisor与原生systemd服务的区别 我的进度： 任务1：磁盘挂载与本地APT仓库 一、在VMware中添加硬盘 在VMware虚拟机设置中添加两块新硬盘（各20GB），用于后续挂载实验。\n在虚拟机内操作，检查新添加的磁盘：\nlsblk 可以看到添加成功，出现了 sdb 和 sdc 两块新磁盘。\n二、创建第一个磁盘分区并挂载到 /mnt 创建分区（假设为/dev/sdb） sudo fdisk /dev/sdb 操作步骤：n -\u003e p -\u003e 1 -\u003e 回车 -\u003e 回车 -\u003e w\n输入 n —— New，新建分区 输入 p —— primary，创建主分区 分区号默认 1，起始扇区、结束扇区全部直接回车，整块 20G 磁盘只分一个分区 输入 w —— write，把分区配置写入磁盘并保存退出 格式化分区 sudo mkfs.ext4 /dev/sdb1 mkfs.ext4 = make filesystem ext4，给空白分区创建 ext4 文件系统。磁盘分区只是划分空间，必须格式化后才能存放文件、挂载使用。\n创建挂载点并挂载 sudo mkdir -p /mnt sudo mount /dev/sdb1 /mnt 持久化挂载（编辑fstab） echo '/dev/sdb1 /mnt ext4 defaults 0 0' | sudo tee -a /etc/fstab 之前执行的 sudo mount /dev/sdb1 /mnt 是临时挂载，虚拟机重启后挂载会失效；写入 /etc/fstab 后，系统开机自动读取该文件，实现永久挂载。\n三、创建 /mnt/repository 并下载 MySQL 8.0 包 创建repository目录 sudo mkdir -p /mnt/repository 安装必要的工具 sudo apt update sudo apt install -y wget gnupg2 gnupg2（GNU Privacy Guard 2）：GPG 加密签名工具，用于生成、校验软件仓库的数字签名，消除 apt update 时的「仓库未签名」警告。\n下载MySQL官方APT仓库配置包 cd /mnt/repository sudo apt install -y mysql-server-8.0 生成仓库元数据 cd /mnt/repository sudo apt install -y dpkg-dev dpkg-scanpackages --multiversion . /dev/null | gzip -9c \u003e Packages.gz apt-ftparchive release . \u003e Release 添加本地仓库源 echo \"deb file:///mnt/repository ./\" | sudo tee /etc/apt/sources.list.d/local-mysql-repo.list 更新软件包索引 sudo apt update 验证是否成功 apt-cache policy mysql-server-8.0 四、挂载第二个磁盘到 /mnt/repository 并安装 MySQL 思考：当磁盘挂载到 /mnt/repository 时如何使用本地仓库？\n有两种解决方案：\n方案A：在挂载前下载包，挂载后使用\n在挂载第二个磁盘之前，先下载所有包到 /mnt/repository\n创建第二个磁盘的分区和格式化（假设为/dev/sdc）\nsudo fdisk /dev/sdc # 操作：n -\u003e p -\u003e 1 -\u003e 回车 -\u003e 回车 -\u003e w sudo mkfs.ext4 /dev/sdc1 备份现有 /mnt/repository 的内容 sudo cp -a /mnt/repository /tmp/mnt_repository_backup 挂载第二个磁盘到 /mnt/repository sudo mount /dev/sdc1 /mnt/repository 复制备份的内容到新磁盘 sudo cp -a /tmp/mnt_repository_backup/* /mnt/repository/ 持久化挂载 echo '/dev/sdc1 /mnt/repository ext4 defaults 0 0' | sudo tee -a /etc/fstab 确保仓库元数据正确 cd /mnt/repository sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c \u003e Packages.gz sudo apt-ftparchive release . \u003e Release 更新软件包索引并安装MySQL sudo apt update sudo apt install -y mysql-server-8.0 方案B：动态链接仓库路径\n先挂载磁盘 sudo mount /dev/sdc1 /mnt/repository 创建软链接到其他位置存放deb包 sudo mkdir -p /var/cache/repository-packages sudo ln -s /var/cache/repository-packages /mnt/repository/.deb-cache 下载包到缓存位置 cd /var/cache/repository-packages sudo apt download mysql-server-8.0 mysql-client-8.0 mysql-common 重新生成仓库元数据 cd /mnt/repository sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c \u003e Packages.gz sudo apt-ftparchive release . \u003e Release 安装MySQL sudo apt update sudo apt install -y mysql-server-8.0 任务2：MySQL服务管理与systemd 一、启动MySQL服务并获取PID 启动MySQL服务 sudo systemctl start mysql 检查服务状态 sudo systemctl status mysql 获取MySQL进程PID # 方法1：使用systemctl systemctl show mysql -p MainPID # 方法2：使用pgrep pgrep mysql # 或者 pgrep -a mysql # 方法3：使用pidof pidof mysqld # 方法4：使用ps配合grep ps aux | grep mysql 通过PID反查进程所属服务 # 方法1：使用lsof查看进程打开的文件 sudo lsof -p # 方法2：使用fuser查看进程使用的文件系统 sudo fuser /var/run/mysqld/mysqld.sock # 方法3：使用systemd-cgls查看cgroup systemd-cgls # 方法4：使用cat查看进程的cgroup信息 cat /proc//cgroup # 方法5：使用systemctl status查看（最直接） systemctl status 思考：拿到进程PID如何反过来查到进程所属服务？\n推荐方法：使用 systemctl status ，systemd会自动识别PID所属的服务名称。 或者手动查询：sudo systemctl list-units --type=service | grep -E \"$(cat /proc//cgroup | grep -o 'system.slice/.*' | cut -d'/' -f2)\"\n二、创建自定义systemd服务（定时备份MySQL配置） 创建备份脚本 sudo mkdir -p /opt/scripts sudo cat \u003e /opt/scripts/backup_mysql_config.sh \u003c\u003c 'EOF' #!/bin/bash # MySQL配置文件备份脚本 BACKUP_DIR=\"/var/backups/mysql\" DATE=$(date +%Y%m%d_%H%M%S) MYSQL_CONF=\"/etc/mysql/mysql.conf.d/mysqld.cnf\" MYSQL_CONF_DIR=\"/etc/mysql/\" # 创建备份目录 mkdir -p $BACKUP_DIR # 备份主配置文件 cp $MYSQL_CONF $BACKUP_DIR/mysqld.cnf.$DATE.bak # 备份整个配置目录（可选） tar -czf $BACKUP_DIR/mysql_conf_$DATE.tar.gz $MYSQL_CONF_DIR # 删除30天前的备份 find $BACKUP_DIR -name \"*.bak\" -mtime +30 -delete find $BACKUP_DIR -name \"*.tar.gz\" -mtime +30 -delete echo \"MySQL配置备份完成: $DATE\" EOF 设置执行权限 sudo chmod +x /opt/scripts/backup_mysql_config.sh 创建systemd服务单元文件 sudo cat \u003e /etc/systemd/system/mysql-config-backup.service \u003c\u003c EOF [Unit] Description=MySQL Configuration Backup Service After=network.target [Service] Type=oneshot ExecStart=/opt/scripts/backup_mysql_config.sh User=root Group=root EOF 创建systemd定时器单元文件 sudo cat \u003e /etc/systemd/system/mysql-config-backup.timer \u003c\u003c EOF [Unit] Description=Run MySQL Config Backup Every Hour [Timer] OnCalendar=*-*-* *:00:00 Persistent=true [Install] WantedBy=timers.target EOF 重新加载systemd配置 sudo systemctl daemon-reload 启用并启动定时器 sudo systemctl enable mysql-config-backup.timer sudo systemctl start mysql-config-backup.timer 检查定时器状态 sudo systemctl status mysql-config-backup.timer sudo systemctl list-timers 手动测试一次服务 sudo systemctl start mysql-config-backup.service sudo journalctl -u mysql-config-backup.service 查看备份结果 ls -la /var/backups/mysql/ 思考其他实现方式：\n方式1：使用 crontab -e，添加：0 * * * * /opt/scripts/backup_mysql_config.sh 方式2：使用 at 命令（一次性任务，需要循环调用） 方式3：使用 anacron（适合笔记本/不常开机的设备） 方式4：使用第三方工具如 Jenkins/GitLab-CI 进行定时任务 三、安装学习 supervisor 工具 安装 supervisor sudo apt update sudo apt install -y supervisor 启动并设置开机自启 sudo systemctl start supervisor sudo systemctl enable supervisor 检查服务状态 sudo systemctl status supervisor 查看supervisor配置文件 ls -la /etc/supervisor/ cat /etc/supervisor/supervisord.conf 使用supervisor管理一个示例程序 创建测试程序：\ncat \u003e /opt/scripts/test_program.sh \u003c\u003c 'EOF' #!/bin/bash while true; do echo \"$(date): Hello from Supervisor\" \u003e\u003e /var/log/test_program.log sleep 10 done EOF chmod +x /opt/scripts/test_program.sh 创建supervisor配置文件 sudo cat \u003e /etc/supervisor/conf.d/test_program.conf \u003c\u003c EOF [program:test_program] command=/opt/scripts/test_program.sh directory=/opt/scripts autostart=true autorestart=true stderr_logfile=/var/log/test_program.err.log stdout_logfile=/var/log/test_program.out.log user=root EOF 重新加载supervisor配置 sudo supervisorctl reread sudo supervisorctl update 管理supervisor进程 sudo supervisorctl status all sudo supervisorctl start test_program sudo supervisorctl stop test_program sudo supervisorctl restart test_program sudo supervisorctl tail -f test_program 查看supervisor管理的进程 ps aux | grep test_program 思考：Supervisor 与 systemd 的区别 特性 Supervisor Systemd 设计目的 专注于进程管理、监控和自动重启 系统初始化和服务管理 进程监控 监控进程状态，自动重启崩溃进程 监控服务状态，但对单个进程监控较弱 日志管理 内置日志轮转和集中管理 依赖journald，日志分散 配置方式 INI格式，简单直观 Unit文件，功能强大但复杂 资源限制 支持进程级别的资源限制（CPU、内存） 支持cgroup资源限制，功能更全面 网络管理 不支持 支持socket激活、网络配置等 依赖管理 简单的启动顺序控制 复杂的依赖关系管理 适用场景 单机应用、容器内进程管理 系统服务、需要复杂依赖管理的场景 学习曲线 简单，易于上手 功能强大，学习曲线较陡 总结：\nSupervisor：适合管理单个应用程序进程，特别是需要自动重启、日志管理的场景 Systemd：适合系统级服务管理，需要复杂的依赖关系、资源控制、网络管理等场景 ",
+  "wordCount" : "705",
+  "inLanguage": "en",
+  "datePublished": "2026-07-22T00:00:00Z",
+  "dateModified": "2026-07-22T00:00:00Z",
+  "author":{
+    "@type": "Person",
+    "name": "Thouser"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "http://localhost:1313/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Thouser的技术博客",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "http://localhost:1313/favicon.ico"
+    }
+  }
+}
+</script>
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Thouser的技术博客 (Alt + H)">Thouser的技术博客</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/archives" title="归档">
+                    <span>归档</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search" title="搜索 (Alt &#43; /)" accesskey=/>
+                    <span>搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/categories" title="分类">
+                    <span>分类</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/tags" title="标签">
+                    <span>标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/internship" title="实习记录">
+                    <span>实习记录</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/internship/">实习记录</a></div>
+    <h1 class="post-title entry-hint-parent">
+      第二天
+    </h1>
+    <div class="post-meta"><span title='2026-07-22 00:00:00 +0000 UTC'>2026-07-22</span>&nbsp;·&nbsp;<span>4 min</span>&nbsp;·&nbsp;<span>705 words</span>&nbsp;·&nbsp;<span>Thouser</span>
+
+</div>
+  </header> <div class="toc">
+    <details >
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">Table of Contents</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%bb%e9%a2%98%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%e7%94%a8%e6%88%b7%e6%9d%83%e9%99%90%e4%b8%8e%e5%8c%85%e7%ae%a1%e7%90%86linux-%e6%9c%8d%e5%8a%a1%e6%97%a5%e5%bf%97%e4%b8%8e%e8%bf%9b%e7%a8%8b%e7%ae%a1%e7%90%86" aria-label="主题：文件系统、用户权限与包管理，Linux 服务、日志与进程管理">主题：文件系统、用户权限与包管理，Linux 服务、日志与进程管理</a></li>
+                <li>
+                    <a href="#%e5%ad%a6%e4%b9%a0%e7%9b%ae%e6%a0%87%e6%8e%8c%e6%8f%a1%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%e7%b1%bb%e5%9e%8b%e7%a1%ac%e8%bd%af%e9%93%be%e6%8e%a5%e6%8c%82%e8%bd%bd%e7%94%a8%e6%88%b7%e7%bb%84sudosuaptdpkgdnfyumrpm%e6%8e%8c%e6%8f%a1-systemd%e6%9c%8d%e5%8a%a1%e7%ae%a1%e7%90%86journalctlrsyslog%e4%bb%a5%e5%8f%8a%e5%90%84%e7%b1%bb%e7%b3%bb%e7%bb%9f%e6%97%a5%e5%bf%97%e6%96%87%e4%bb%b6pstopkill" aria-label="学习目标：掌握文件系统类型、硬/软链接、挂载、用户组、sudo/su、apt/dpkg，dnf/yum/rpm。掌握 systemd服务管理、journalctl、rsyslog以及各类系统日志文件、ps/top/kill">学习目标：掌握文件系统类型、硬/软链接、挂载、用户组、sudo/su、apt/dpkg，dnf/yum/rpm。掌握 systemd服务管理、journalctl、rsyslog以及各类系统日志文件、ps/top/kill</a></li>
+                <li>
+                    <a href="#%e5%bd%93%e6%97%a5%e4%bb%bb%e5%8a%a1" aria-label="当日任务：">当日任务：</a></li>
+                <li>
+                    <a href="#%e6%88%91%e7%9a%84%e8%bf%9b%e5%ba%a6" aria-label="我的进度：">我的进度：</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bb%bb%e5%8a%a11%e7%a3%81%e7%9b%98%e6%8c%82%e8%bd%bd%e4%b8%8e%e6%9c%ac%e5%9c%b0apt%e4%bb%93%e5%ba%93" aria-label="任务1：磁盘挂载与本地APT仓库">任务1：磁盘挂载与本地APT仓库</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e5%9c%a8vmware%e4%b8%ad%e6%b7%bb%e5%8a%a0%e7%a1%ac%e7%9b%98" aria-label="一、在VMware中添加硬盘">一、在VMware中添加硬盘</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%88%9b%e5%bb%ba%e7%ac%ac%e4%b8%80%e4%b8%aa%e7%a3%81%e7%9b%98%e5%88%86%e5%8c%ba%e5%b9%b6%e6%8c%82%e8%bd%bd%e5%88%b0-mnt" aria-label="二、创建第一个磁盘分区并挂载到 /mnt">二、创建第一个磁盘分区并挂载到 /mnt</a></li>
+                <li>
+                    <a href="#%e4%b8%89%e5%88%9b%e5%bb%ba-mntrepository-%e5%b9%b6%e4%b8%8b%e8%bd%bd-mysql-80-%e5%8c%85" aria-label="三、创建 /mnt/repository 并下载 MySQL 8.0 包">三、创建 /mnt/repository 并下载 MySQL 8.0 包</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e6%8c%82%e8%bd%bd%e7%ac%ac%e4%ba%8c%e4%b8%aa%e7%a3%81%e7%9b%98%e5%88%b0-mntrepository-%e5%b9%b6%e5%ae%89%e8%a3%85-mysql" aria-label="四、挂载第二个磁盘到 /mnt/repository 并安装 MySQL">四、挂载第二个磁盘到 /mnt/repository 并安装 MySQL</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%bb%bb%e5%8a%a12mysql%e6%9c%8d%e5%8a%a1%e7%ae%a1%e7%90%86%e4%b8%8esystemd" aria-label="任务2：MySQL服务管理与systemd">任务2：MySQL服务管理与systemd</a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e5%90%af%e5%8a%a8mysql%e6%9c%8d%e5%8a%a1%e5%b9%b6%e8%8e%b7%e5%8f%96pid" aria-label="一、启动MySQL服务并获取PID">一、启动MySQL服务并获取PID</a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%88%9b%e5%bb%ba%e8%87%aa%e5%ae%9a%e4%b9%89systemd%e6%9c%8d%e5%8a%a1%e5%ae%9a%e6%97%b6%e5%a4%87%e4%bb%bdmysql%e9%85%8d%e7%bd%ae" aria-label="二、创建自定义systemd服务（定时备份MySQL配置）">二、创建自定义systemd服务（定时备份MySQL配置）</a></li>
+                <li>
+                    <a href="#%e4%b8%89%e5%ae%89%e8%a3%85%e5%ad%a6%e4%b9%a0-supervisor-%e5%b7%a5%e5%85%b7" aria-label="三、安装学习 supervisor 工具">三、安装学习 supervisor 工具</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e6%80%9d%e8%80%83supervisor-%e4%b8%8e-systemd-%e7%9a%84%e5%8c%ba%e5%88%ab" aria-label="思考：Supervisor 与 systemd 的区别">思考：Supervisor 与 systemd 的区别</a>
+                </li>
+            </ul>
+        </div>
+    </details>
+</div>
+
+  <div class="post-content"><h2 id="主题文件系统用户权限与包管理linux-服务日志与进程管理">主题：文件系统、用户权限与包管理，Linux 服务、日志与进程管理<a hidden class="anchor" aria-hidden="true" href="#主题文件系统用户权限与包管理linux-服务日志与进程管理">#</a></h2>
+<h2 id="学习目标掌握文件系统类型硬软链接挂载用户组sudosuaptdpkgdnfyumrpm掌握-systemd服务管理journalctlrsyslog以及各类系统日志文件pstopkill">学习目标：掌握文件系统类型、硬/软链接、挂载、用户组、sudo/su、apt/dpkg，dnf/yum/rpm。掌握 systemd服务管理、journalctl、rsyslog以及各类系统日志文件、ps/top/kill<a hidden class="anchor" aria-hidden="true" href="#学习目标掌握文件系统类型硬软链接挂载用户组sudosuaptdpkgdnfyumrpm掌握-systemd服务管理journalctlrsyslog以及各类系统日志文件pstopkill">#</a></h2>
+<h2 id="当日任务">当日任务：<a hidden class="anchor" aria-hidden="true" href="#当日任务">#</a></h2>
+<ol>
+<li>
+<p>根据学习目标展开学习</p>
+</li>
+<li>
+<p>实操任务1：</p>
+<ol>
+<li>
+<p>分配两个磁盘给虚拟机，一个磁盘挂载至/mnt。</p>
+</li>
+<li>
+<p>创建/mnt/repository目录，下载mysql8.0软件deb包以及相关依赖包到/mnt/repository目录下（不安装仅下载）。</p>
+</li>
+<li>
+<p>将/mnt/repository做成本地apt仓库。</p>
+</li>
+<li>
+<p>将另外一块磁盘挂载到/mnt/repository，挂载好后思考怎么在磁盘挂载的情况下使用刚刚做好的本地apt仓库安装mysql8.0</p>
+</li>
+</ol>
+</li>
+<li>
+<p>实操任务2：</p>
+<ul>
+<li>
+<p>启动mysql服务，获取到mysql服务下进程的pid。（思考拿到进程pid如何反过来查到进程所属服务）</p>
+</li>
+<li>
+<p>创建一个自定义systemd服务，服务能够实现定时每1个小时备份一次mysql的配置文件（思考其他实现方式）</p>
+</li>
+</ul>
+<ol>
+<li>安装学习supervisor工具，并思考supervisor与原生systemd服务的区别</li>
+</ol>
+</li>
+</ol>
+<hr>
+<h2 id="我的进度">我的进度：<a hidden class="anchor" aria-hidden="true" href="#我的进度">#</a></h2>
+<h3 id="任务1磁盘挂载与本地apt仓库">任务1：磁盘挂载与本地APT仓库<a hidden class="anchor" aria-hidden="true" href="#任务1磁盘挂载与本地apt仓库">#</a></h3>
+<h4 id="一在vmware中添加硬盘">一、在VMware中添加硬盘<a hidden class="anchor" aria-hidden="true" href="#一在vmware中添加硬盘">#</a></h4>
+<p>在VMware虚拟机设置中添加两块新硬盘（各20GB），用于后续挂载实验。</p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%201.png"></p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%206.png"></p>
+<p>在虚拟机内操作，检查新添加的磁盘：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>lsblk
+</span></span></code></pre></div><p>可以看到添加成功，出现了 sdb 和 sdc 两块新磁盘。</p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%2010.png"></p>
+<h4 id="二创建第一个磁盘分区并挂载到-mnt">二、创建第一个磁盘分区并挂载到 /mnt<a hidden class="anchor" aria-hidden="true" href="#二创建第一个磁盘分区并挂载到-mnt">#</a></h4>
+<ol>
+<li>创建分区（假设为/dev/sdb）</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo fdisk /dev/sdb
+</span></span></code></pre></div><p>操作步骤：<code>n</code> -&gt; <code>p</code> -&gt; <code>1</code> -&gt; 回车 -&gt; 回车 -&gt; <code>w</code></p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%209.png"></p>
+<ul>
+<li>输入 <code>n</code> —— New，新建分区</li>
+<li>输入 <code>p</code> —— primary，创建<strong>主分区</strong></li>
+<li>分区号默认 1，起始扇区、结束扇区全部直接回车，<strong>整块 20G 磁盘只分一个分区</strong></li>
+<li>输入 <code>w</code> —— write，<strong>把分区配置写入磁盘并保存退出</strong></li>
+</ul>
+<ol start="2">
+<li>格式化分区</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkfs.ext4 /dev/sdb1
+</span></span></code></pre></div><p><code>mkfs.ext4</code> = make filesystem ext4，给空白分区创建 ext4 文件系统。磁盘分区只是划分空间，必须格式化后才能存放文件、挂载使用。</p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%202.png"></p>
+<ol start="3">
+<li>创建挂载点并挂载</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /mnt
+</span></span><span style="display:flex;"><span>sudo mount /dev/sdb1 /mnt
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image.png"></p>
+<ol start="4">
+<li>持久化挂载（编辑fstab）</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;/dev/sdb1 /mnt ext4 defaults 0 0&#39;</span> | sudo tee -a /etc/fstab
+</span></span></code></pre></div><p>之前执行的 <code>sudo mount /dev/sdb1 /mnt</code> 是<strong>临时挂载</strong>，虚拟机重启后挂载会失效；写入 <code>/etc/fstab</code> 后，系统开机自动读取该文件，实现永久挂载。</p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%205.png"></p>
+<h4 id="三创建-mntrepository-并下载-mysql-80-包">三、创建 /mnt/repository 并下载 MySQL 8.0 包<a hidden class="anchor" aria-hidden="true" href="#三创建-mntrepository-并下载-mysql-80-包">#</a></h4>
+<ol>
+<li>创建repository目录</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /mnt/repository
+</span></span></code></pre></div><ol start="2">
+<li>安装必要的工具</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y wget gnupg2
+</span></span></code></pre></div><blockquote>
+<p>gnupg2（GNU Privacy Guard 2）：GPG 加密签名工具，用于生成、校验软件仓库的数字签名，消除 <code>apt update</code> 时的「仓库未签名」警告。</p>
+</blockquote>
+<ol start="3">
+<li>下载MySQL官方APT仓库配置包</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /mnt/repository
+</span></span><span style="display:flex;"><span>sudo apt install -y mysql-server-8.0
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%207.png"></p>
+<ol start="4">
+<li>生成仓库元数据</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /mnt/repository
+</span></span><span style="display:flex;"><span>sudo apt install -y dpkg-dev
+</span></span><span style="display:flex;"><span>dpkg-scanpackages --multiversion . /dev/null | gzip -9c &gt; Packages.gz
+</span></span><span style="display:flex;"><span>apt-ftparchive release . &gt; Release
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%2012.png"></p>
+<p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%204.png"></p>
+<ol start="5">
+<li>添加本地仓库源</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#34;deb file:///mnt/repository ./&#34;</span> | sudo tee /etc/apt/sources.list.d/local-mysql-repo.list
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%2011.png"></p>
+<ol start="6">
+<li>更新软件包索引</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span></code></pre></div><ol start="7">
+<li>验证是否成功</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>apt-cache policy mysql-server-8.0
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%203.png"></p>
+<h4 id="四挂载第二个磁盘到-mntrepository-并安装-mysql">四、挂载第二个磁盘到 /mnt/repository 并安装 MySQL<a hidden class="anchor" aria-hidden="true" href="#四挂载第二个磁盘到-mntrepository-并安装-mysql">#</a></h4>
+<p><strong>思考：当磁盘挂载到 /mnt/repository 时如何使用本地仓库？</strong></p>
+<p>有两种解决方案：</p>
+<p><strong>方案A：在挂载前下载包，挂载后使用</strong></p>
+<ol>
+<li>
+<p>在挂载第二个磁盘之前，先下载所有包到 /mnt/repository</p>
+</li>
+<li>
+<p>创建第二个磁盘的分区和格式化（假设为/dev/sdc）</p>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo fdisk /dev/sdc
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 操作：n -&gt; p -&gt; 1 -&gt; 回车 -&gt; 回车 -&gt; w</span>
+</span></span><span style="display:flex;"><span>sudo mkfs.ext4 /dev/sdc1
+</span></span></code></pre></div><ol start="3">
+<li>备份现有 /mnt/repository 的内容</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cp -a /mnt/repository /tmp/mnt_repository_backup
+</span></span></code></pre></div><ol start="4">
+<li>挂载第二个磁盘到 /mnt/repository</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mount /dev/sdc1 /mnt/repository
+</span></span></code></pre></div><ol start="5">
+<li>复制备份的内容到新磁盘</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cp -a /tmp/mnt_repository_backup/* /mnt/repository/
+</span></span></code></pre></div><ol start="6">
+<li>持久化挂载</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>echo <span style="color:#e6db74">&#39;/dev/sdc1 /mnt/repository ext4 defaults 0 0&#39;</span> | sudo tee -a /etc/fstab
+</span></span></code></pre></div><ol start="7">
+<li>确保仓库元数据正确</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /mnt/repository
+</span></span><span style="display:flex;"><span>sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c &gt; Packages.gz
+</span></span><span style="display:flex;"><span>sudo apt-ftparchive release . &gt; Release
+</span></span></code></pre></div><ol start="8">
+<li>更新软件包索引并安装MySQL</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y mysql-server-8.0
+</span></span></code></pre></div><p><strong>方案B：动态链接仓库路径</strong></p>
+<ol>
+<li>先挂载磁盘</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mount /dev/sdc1 /mnt/repository
+</span></span></code></pre></div><ol start="2">
+<li>创建软链接到其他位置存放deb包</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /var/cache/repository-packages
+</span></span><span style="display:flex;"><span>sudo ln -s /var/cache/repository-packages /mnt/repository/.deb-cache
+</span></span></code></pre></div><ol start="3">
+<li>下载包到缓存位置</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /var/cache/repository-packages
+</span></span><span style="display:flex;"><span>sudo apt download mysql-server-8.0 mysql-client-8.0 mysql-common
+</span></span></code></pre></div><ol start="4">
+<li>重新生成仓库元数据</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cd /mnt/repository
+</span></span><span style="display:flex;"><span>sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c &gt; Packages.gz
+</span></span><span style="display:flex;"><span>sudo apt-ftparchive release . &gt; Release
+</span></span></code></pre></div><ol start="5">
+<li>安装MySQL</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y mysql-server-8.0
+</span></span></code></pre></div><hr>
+<h3 id="任务2mysql服务管理与systemd">任务2：MySQL服务管理与systemd<a hidden class="anchor" aria-hidden="true" href="#任务2mysql服务管理与systemd">#</a></h3>
+<h4 id="一启动mysql服务并获取pid">一、启动MySQL服务并获取PID<a hidden class="anchor" aria-hidden="true" href="#一启动mysql服务并获取pid">#</a></h4>
+<ol>
+<li>启动MySQL服务</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl start mysql
+</span></span></code></pre></div><ol start="2">
+<li>检查服务状态</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl status mysql
+</span></span></code></pre></div><ol start="3">
+<li>获取MySQL进程PID</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 方法1：使用systemctl</span>
+</span></span><span style="display:flex;"><span>systemctl show mysql -p MainPID
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法2：使用pgrep</span>
+</span></span><span style="display:flex;"><span>pgrep mysql
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 或者</span>
+</span></span><span style="display:flex;"><span>pgrep -a mysql
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法3：使用pidof</span>
+</span></span><span style="display:flex;"><span>pidof mysqld
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法4：使用ps配合grep</span>
+</span></span><span style="display:flex;"><span>ps aux | grep mysql
+</span></span></code></pre></div><ol start="4">
+<li>通过PID反查进程所属服务</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 方法1：使用lsof查看进程打开的文件</span>
+</span></span><span style="display:flex;"><span>sudo lsof -p &lt;PID&gt;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法2：使用fuser查看进程使用的文件系统</span>
+</span></span><span style="display:flex;"><span>sudo fuser /var/run/mysqld/mysqld.sock
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法3：使用systemd-cgls查看cgroup</span>
+</span></span><span style="display:flex;"><span>systemd-cgls
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法4：使用cat查看进程的cgroup信息</span>
+</span></span><span style="display:flex;"><span>cat /proc/&lt;PID&gt;/cgroup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 方法5：使用systemctl status查看（最直接）</span>
+</span></span><span style="display:flex;"><span>systemctl status &lt;PID&gt;
+</span></span></code></pre></div><blockquote>
+<p><strong>思考：拿到进程PID如何反过来查到进程所属服务？</strong></p>
+<p>推荐方法：使用 <code>systemctl status &lt;PID&gt;</code>，systemd会自动识别PID所属的服务名称。
+或者手动查询：<code>sudo systemctl list-units --type=service | grep -E &quot;$(cat /proc/&lt;PID&gt;/cgroup | grep -o 'system.slice/.*' | cut -d'/' -f2)&quot;</code></p>
+</blockquote>
+<h4 id="二创建自定义systemd服务定时备份mysql配置">二、创建自定义systemd服务（定时备份MySQL配置）<a hidden class="anchor" aria-hidden="true" href="#二创建自定义systemd服务定时备份mysql配置">#</a></h4>
+<ol>
+<li>创建备份脚本</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo mkdir -p /opt/scripts
+</span></span><span style="display:flex;"><span>sudo cat &gt; /opt/scripts/backup_mysql_config.sh <span style="color:#e6db74">&lt;&lt; &#39;EOF&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># MySQL配置文件备份脚本
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">BACKUP_DIR=&#34;/var/backups/mysql&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">DATE=$(date +%Y%m%d_%H%M%S)
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">MYSQL_CONF=&#34;/etc/mysql/mysql.conf.d/mysqld.cnf&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">MYSQL_CONF_DIR=&#34;/etc/mysql/&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 创建备份目录
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">mkdir -p $BACKUP_DIR
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 备份主配置文件
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">cp $MYSQL_CONF $BACKUP_DIR/mysqld.cnf.$DATE.bak
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 备份整个配置目录（可选）
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">tar -czf $BACKUP_DIR/mysql_conf_$DATE.tar.gz $MYSQL_CONF_DIR
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74"># 删除30天前的备份
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">find $BACKUP_DIR -name &#34;*.bak&#34; -mtime +30 -delete
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">find $BACKUP_DIR -name &#34;*.tar.gz&#34; -mtime +30 -delete
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">echo &#34;MySQL配置备份完成: $DATE&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span></code></pre></div><p><img alt="image.png" loading="lazy" src="/internship/%E7%AC%AC%E4%BA%8C%E5%A4%A9/image/image%208.png"></p>
+<ol start="2">
+<li>设置执行权限</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo chmod +x /opt/scripts/backup_mysql_config.sh
+</span></span></code></pre></div><ol start="3">
+<li>创建systemd服务单元文件</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cat &gt; /etc/systemd/system/mysql-config-backup.service <span style="color:#e6db74">&lt;&lt; EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Unit]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Description=MySQL Configuration Backup Service
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">After=network.target
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Service]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Type=oneshot
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">ExecStart=/opt/scripts/backup_mysql_config.sh
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">User=root
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Group=root
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span></code></pre></div><ol start="4">
+<li>创建systemd定时器单元文件</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cat &gt; /etc/systemd/system/mysql-config-backup.timer <span style="color:#e6db74">&lt;&lt; EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Unit]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Description=Run MySQL Config Backup Every Hour
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Timer]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">OnCalendar=*-*-* *:00:00
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">Persistent=true
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[Install]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">WantedBy=timers.target
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span></code></pre></div><ol start="5">
+<li>重新加载systemd配置</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl daemon-reload
+</span></span></code></pre></div><ol start="6">
+<li>启用并启动定时器</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl enable mysql-config-backup.timer
+</span></span><span style="display:flex;"><span>sudo systemctl start mysql-config-backup.timer
+</span></span></code></pre></div><ol start="7">
+<li>检查定时器状态</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl status mysql-config-backup.timer
+</span></span><span style="display:flex;"><span>sudo systemctl list-timers
+</span></span></code></pre></div><ol start="8">
+<li>手动测试一次服务</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl start mysql-config-backup.service
+</span></span><span style="display:flex;"><span>sudo journalctl -u mysql-config-backup.service
+</span></span></code></pre></div><ol start="9">
+<li>查看备份结果</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls -la /var/backups/mysql/
+</span></span></code></pre></div><blockquote>
+<p><strong>思考其他实现方式：</strong></p>
+<ul>
+<li>方式1：使用 <code>crontab -e</code>，添加：<code>0 * * * * /opt/scripts/backup_mysql_config.sh</code></li>
+<li>方式2：使用 at 命令（一次性任务，需要循环调用）</li>
+<li>方式3：使用 anacron（适合笔记本/不常开机的设备）</li>
+<li>方式4：使用第三方工具如 Jenkins/GitLab-CI 进行定时任务</li>
+</ul>
+</blockquote>
+<h4 id="三安装学习-supervisor-工具">三、安装学习 supervisor 工具<a hidden class="anchor" aria-hidden="true" href="#三安装学习-supervisor-工具">#</a></h4>
+<ol>
+<li>安装 supervisor</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo apt update
+</span></span><span style="display:flex;"><span>sudo apt install -y supervisor
+</span></span></code></pre></div><ol start="2">
+<li>启动并设置开机自启</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl start supervisor
+</span></span><span style="display:flex;"><span>sudo systemctl enable supervisor
+</span></span></code></pre></div><ol start="3">
+<li>检查服务状态</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo systemctl status supervisor
+</span></span></code></pre></div><ol start="4">
+<li>查看supervisor配置文件</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ls -la /etc/supervisor/
+</span></span><span style="display:flex;"><span>cat /etc/supervisor/supervisord.conf
+</span></span></code></pre></div><ol start="5">
+<li>使用supervisor管理一个示例程序</li>
+</ol>
+<p>创建测试程序：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cat &gt; /opt/scripts/test_program.sh <span style="color:#e6db74">&lt;&lt; &#39;EOF&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">#!/bin/bash
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">while true; do
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    echo &#34;$(date): Hello from Supervisor&#34; &gt;&gt; /var/log/test_program.log
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    sleep 10
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">done
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span><span style="display:flex;"><span>chmod +x /opt/scripts/test_program.sh
+</span></span></code></pre></div><ol start="6">
+<li>创建supervisor配置文件</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo cat &gt; /etc/supervisor/conf.d/test_program.conf <span style="color:#e6db74">&lt;&lt; EOF
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">[program:test_program]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">command=/opt/scripts/test_program.sh
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">directory=/opt/scripts
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">autostart=true
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">autorestart=true
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">stderr_logfile=/var/log/test_program.err.log
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">stdout_logfile=/var/log/test_program.out.log
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">user=root
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">EOF</span>
+</span></span></code></pre></div><ol start="7">
+<li>重新加载supervisor配置</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo supervisorctl reread
+</span></span><span style="display:flex;"><span>sudo supervisorctl update
+</span></span></code></pre></div><ol start="8">
+<li>管理supervisor进程</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>sudo supervisorctl status all
+</span></span><span style="display:flex;"><span>sudo supervisorctl start test_program
+</span></span><span style="display:flex;"><span>sudo supervisorctl stop test_program
+</span></span><span style="display:flex;"><span>sudo supervisorctl restart test_program
+</span></span><span style="display:flex;"><span>sudo supervisorctl tail -f test_program
+</span></span></code></pre></div><ol start="9">
+<li>查看supervisor管理的进程</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ps aux | grep test_program
+</span></span></code></pre></div><hr>
+<h2 id="思考supervisor-与-systemd-的区别">思考：Supervisor 与 systemd 的区别<a hidden class="anchor" aria-hidden="true" href="#思考supervisor-与-systemd-的区别">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>Supervisor</th>
+          <th>Systemd</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>设计目的</strong></td>
+          <td>专注于进程管理、监控和自动重启</td>
+          <td>系统初始化和服务管理</td>
+      </tr>
+      <tr>
+          <td><strong>进程监控</strong></td>
+          <td>监控进程状态，自动重启崩溃进程</td>
+          <td>监控服务状态，但对单个进程监控较弱</td>
+      </tr>
+      <tr>
+          <td><strong>日志管理</strong></td>
+          <td>内置日志轮转和集中管理</td>
+          <td>依赖journald，日志分散</td>
+      </tr>
+      <tr>
+          <td><strong>配置方式</strong></td>
+          <td>INI格式，简单直观</td>
+          <td>Unit文件，功能强大但复杂</td>
+      </tr>
+      <tr>
+          <td><strong>资源限制</strong></td>
+          <td>支持进程级别的资源限制（CPU、内存）</td>
+          <td>支持cgroup资源限制，功能更全面</td>
+      </tr>
+      <tr>
+          <td><strong>网络管理</strong></td>
+          <td>不支持</td>
+          <td>支持socket激活、网络配置等</td>
+      </tr>
+      <tr>
+          <td><strong>依赖管理</strong></td>
+          <td>简单的启动顺序控制</td>
+          <td>复杂的依赖关系管理</td>
+      </tr>
+      <tr>
+          <td><strong>适用场景</strong></td>
+          <td>单机应用、容器内进程管理</td>
+          <td>系统服务、需要复杂依赖管理的场景</td>
+      </tr>
+      <tr>
+          <td><strong>学习曲线</strong></td>
+          <td>简单，易于上手</td>
+          <td>功能强大，学习曲线较陡</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>总结：</strong></p>
+<ul>
+<li><strong>Supervisor</strong>：适合管理单个应用程序进程，特别是需要自动重启、日志管理的场景</li>
+<li><strong>Systemd</strong>：适合系统级服务管理，需要复杂的依赖关系、资源控制、网络管理等场景</li>
+</ul>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/linux/">Linux</a></li>
+      <li><a href="http://localhost:1313/tags/%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F/">文件系统</a></li>
+      <li><a href="http://localhost:1313/tags/systemd/">Systemd</a></li>
+      <li><a href="http://localhost:1313/tags/mysql/">MySQL</a></li>
+      <li><a href="http://localhost:1313/tags/supervisor/">Supervisor</a></li>
+    </ul>
+
+
+<ul class="share-buttons">
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on x"
+            href="https://x.com/intent/tweet/?text=%e7%ac%ac%e4%ba%8c%e5%a4%a9&amp;url=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f&amp;hashtags=Linux%2c%e6%96%87%e4%bb%b6%e7%b3%bb%e7%bb%9f%2csystemd%2cMySQL%2csupervisor">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M512 62.554 L 512 449.446 C 512 483.97 483.97 512 449.446 512 L 62.554 512 C 28.03 512 0 483.97 0 449.446 L 0 62.554 C 0 28.03 28.029 0 62.554 0 L 449.446 0 C 483.971 0 512 28.03 512 62.554 Z M 269.951 190.75 L 182.567 75.216 L 56 75.216 L 207.216 272.95 L 63.9 436.783 L 125.266 436.783 L 235.9 310.383 L 332.567 436.783 L 456 436.783 L 298.367 228.367 L 432.367 75.216 L 371.033 75.216 Z M 127.633 110 L 164.101 110 L 383.481 400.065 L 349.5 400.065 Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on linkedin"
+            href="https://www.linkedin.com/shareArticle?mini=true&amp;url=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f&amp;title=%e7%ac%ac%e4%ba%8c%e5%a4%a9&amp;summary=%e7%ac%ac%e4%ba%8c%e5%a4%a9&amp;source=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-288.985,423.278l0,-225.717l-75.04,0l0,225.717l75.04,0Zm270.539,0l0,-129.439c0,-69.333 -37.018,-101.586 -86.381,-101.586c-39.804,0 -57.634,21.891 -67.617,37.266l0,-31.958l-75.021,0c0.995,21.181 0,225.717 0,225.717l75.02,0l0,-126.056c0,-6.748 0.486,-13.492 2.474,-18.315c5.414,-13.475 17.767,-27.434 38.494,-27.434c27.135,0 38.007,20.707 38.007,51.037l0,120.768l75.024,0Zm-307.552,-334.556c-25.674,0 -42.448,16.879 -42.448,39.002c0,21.658 16.264,39.002 41.455,39.002l0.484,0c26.165,0 42.452,-17.344 42.452,-39.002c-0.485,-22.092 -16.241,-38.954 -41.943,-39.002Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on reddit"
+            href="https://reddit.com/submit?url=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f&title=%e7%ac%ac%e4%ba%8c%e5%a4%a9">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-3.446,265.638c0,-22.964 -18.616,-41.58 -41.58,-41.58c-11.211,0 -21.361,4.457 -28.841,11.666c-28.424,-20.508 -67.586,-33.757 -111.204,-35.278l18.941,-89.121l61.884,13.157c0.756,15.734 13.642,28.29 29.56,28.29c16.407,0 29.706,-13.299 29.706,-29.701c0,-16.403 -13.299,-29.702 -29.706,-29.702c-11.666,0 -21.657,6.792 -26.515,16.578l-69.105,-14.69c-1.922,-0.418 -3.939,-0.042 -5.585,1.036c-1.658,1.073 -2.811,2.761 -3.224,4.686l-21.152,99.438c-44.258,1.228 -84.046,14.494 -112.837,35.232c-7.468,-7.164 -17.589,-11.591 -28.757,-11.591c-22.965,0 -41.585,18.616 -41.585,41.58c0,16.896 10.095,31.41 24.568,37.918c-0.639,4.135 -0.99,8.328 -0.99,12.576c0,63.977 74.469,115.836 166.33,115.836c91.861,0 166.334,-51.859 166.334,-115.836c0,-4.218 -0.347,-8.387 -0.977,-12.493c14.564,-6.47 24.735,-21.034 24.735,-38.001Zm-119.474,108.193c-20.27,20.241 -59.115,21.816 -70.534,21.816c-11.428,0 -50.277,-1.575 -70.522,-21.82c-3.007,-3.008 -3.007,-7.882 0,-10.889c3.003,-2.999 7.882,-3.003 10.885,0c12.777,12.781 40.11,17.317 59.637,17.317c19.522,0 46.86,-4.536 59.657,-17.321c3.016,-2.999 7.886,-2.995 10.885,0.008c3.008,3.011 3.003,7.882 -0.008,10.889Zm-5.23,-48.781c-16.373,0 -29.701,-13.324 -29.701,-29.698c0,-16.381 13.328,-29.714 29.701,-29.714c16.378,0 29.706,13.333 29.706,29.714c0,16.374 -13.328,29.698 -29.706,29.698Zm-160.386,-29.702c0,-16.381 13.328,-29.71 29.714,-29.71c16.369,0 29.689,13.329 29.689,29.71c0,16.373 -13.32,29.693 -29.689,29.693c-16.386,0 -29.714,-13.32 -29.714,-29.693Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on facebook"
+            href="https://facebook.com/sharer/sharer.php?u=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-106.468,0l0,-192.915l66.6,0l12.672,-82.621l-79.272,0l0,-53.617c0,-22.603 11.073,-44.636 46.58,-44.636l36.042,0l0,-70.34c0,0 -32.71,-5.582 -63.982,-5.582c-65.288,0 -107.96,39.569 -107.96,111.204l0,62.971l-72.573,0l0,82.621l72.573,0l0,192.915l-191.104,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on whatsapp"
+            href="https://api.whatsapp.com/send?text=%e7%ac%ac%e4%ba%8c%e5%a4%a9%20-%20http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f">
+            <svg version="1.1" viewBox="0 0 512 512" xml:space="preserve" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M449.446,0c34.525,0 62.554,28.03 62.554,62.554l0,386.892c0,34.524 -28.03,62.554 -62.554,62.554l-386.892,0c-34.524,0 -62.554,-28.03 -62.554,-62.554l0,-386.892c0,-34.524 28.029,-62.554 62.554,-62.554l386.892,0Zm-58.673,127.703c-33.842,-33.881 -78.847,-52.548 -126.798,-52.568c-98.799,0 -179.21,80.405 -179.249,179.234c-0.013,31.593 8.241,62.428 23.927,89.612l-25.429,92.884l95.021,-24.925c26.181,14.28 55.659,21.807 85.658,21.816l0.074,0c98.789,0 179.206,-80.413 179.247,-179.243c0.018,-47.895 -18.61,-92.93 -52.451,-126.81Zm-126.797,275.782l-0.06,0c-26.734,-0.01 -52.954,-7.193 -75.828,-20.767l-5.441,-3.229l-56.386,14.792l15.05,-54.977l-3.542,-5.637c-14.913,-23.72 -22.791,-51.136 -22.779,-79.287c0.033,-82.142 66.867,-148.971 149.046,-148.971c39.793,0.014 77.199,15.531 105.329,43.692c28.128,28.16 43.609,65.592 43.594,105.4c-0.034,82.149 -66.866,148.983 -148.983,148.984Zm81.721,-111.581c-4.479,-2.242 -26.499,-13.075 -30.604,-14.571c-4.105,-1.495 -7.091,-2.241 -10.077,2.241c-2.986,4.483 -11.569,14.572 -14.182,17.562c-2.612,2.988 -5.225,3.364 -9.703,1.12c-4.479,-2.241 -18.91,-6.97 -36.017,-22.23c-13.314,-11.876 -22.304,-26.542 -24.916,-31.026c-2.612,-4.484 -0.279,-6.908 1.963,-9.14c2.016,-2.007 4.48,-5.232 6.719,-7.847c2.24,-2.615 2.986,-4.484 4.479,-7.472c1.493,-2.99 0.747,-5.604 -0.374,-7.846c-1.119,-2.241 -10.077,-24.288 -13.809,-33.256c-3.635,-8.733 -7.327,-7.55 -10.077,-7.688c-2.609,-0.13 -5.598,-0.158 -8.583,-0.158c-2.986,0 -7.839,1.121 -11.944,5.604c-4.105,4.484 -15.675,15.32 -15.675,37.364c0,22.046 16.048,43.342 18.287,46.332c2.24,2.99 31.582,48.227 76.511,67.627c10.685,4.615 19.028,7.371 25.533,9.434c10.728,3.41 20.492,2.929 28.209,1.775c8.605,-1.285 26.499,-10.833 30.231,-21.295c3.732,-10.464 3.732,-19.431 2.612,-21.298c-1.119,-1.869 -4.105,-2.99 -8.583,-5.232Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on telegram"
+            href="https://telegram.me/share/url?text=%e7%ac%ac%e4%ba%8c%e5%a4%a9&amp;url=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f">
+            <svg version="1.1" xml:space="preserve" viewBox="2 2 28 28" height="30px" width="30px" fill="currentColor">
+                <path
+                    d="M26.49,29.86H5.5a3.37,3.37,0,0,1-2.47-1,3.35,3.35,0,0,1-1-2.47V5.48A3.36,3.36,0,0,1,3,3,3.37,3.37,0,0,1,5.5,2h21A3.38,3.38,0,0,1,29,3a3.36,3.36,0,0,1,1,2.46V26.37a3.35,3.35,0,0,1-1,2.47A3.38,3.38,0,0,1,26.49,29.86Zm-5.38-6.71a.79.79,0,0,0,.85-.66L24.73,9.24a.55.55,0,0,0-.18-.46.62.62,0,0,0-.41-.17q-.08,0-16.53,6.11a.59.59,0,0,0-.41.59.57.57,0,0,0,.43.52l4,1.24,1.61,4.83a.62.62,0,0,0,.63.43.56.56,0,0,0,.4-.17L16.54,20l4.09,3A.9.9,0,0,0,21.11,23.15ZM13.8,20.71l-1.21-4q8.72-5.55,8.78-5.55c.15,0,.23,0,.23.16a.18.18,0,0,1,0,.06s-2.51,2.3-7.52,6.8Z" />
+            </svg>
+        </a>
+    </li>
+    <li>
+        <a target="_blank" rel="noopener noreferrer" aria-label="share 第二天 on ycombinator"
+            href="https://news.ycombinator.com/submitlink?t=%e7%ac%ac%e4%ba%8c%e5%a4%a9&u=http%3a%2f%2flocalhost%3a1313%2finternship%2f%25E7%25AC%25AC%25E4%25BA%258C%25E5%25A4%25A9%2f">
+            <svg version="1.1" xml:space="preserve" width="30px" height="30px" viewBox="0 0 512 512" fill="currentColor"
+                xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape">
+                <path
+                    d="M449.446 0C483.971 0 512 28.03 512 62.554L512 449.446C512 483.97 483.97 512 449.446 512L62.554 512C28.03 512 0 483.97 0 449.446L0 62.554C0 28.03 28.029 0 62.554 0L449.446 0ZM183.8767 87.9921H121.8427L230.6673 292.4508V424.0079H281.3328V292.4508L390.1575 87.9921H328.1233L256 238.2489z" />
+            </svg>
+        </a>
+    </li>
+</ul>
+
+  </footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Thouser的技术博客</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
