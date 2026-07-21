@@ -3,6 +3,8 @@ languageCode: "zh-cn"
 title: "Thouser的技术博客"
 theme: "PaperMod"
 
+buildFuture: true
+
 params:
   env: production # to enable google analytics, search, etc.
   title: "Thouser的技术博客"
@@ -76,6 +78,10 @@ menu:
       name: 标签
       url: tags
       weight: 40
+    - identifier: internship
+      name: 实习记录
+      url: internship
+      weight: 50
 
 outputs:
   home:
