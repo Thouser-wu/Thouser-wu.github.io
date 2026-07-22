@@ -33,232 +33,206 @@ summary: "文件系统、用户权限与包管理，Linux 服务、日志与进�
 
     1. 安装学习supervisor工具，并思考supervisor与原生systemd服务的区别
 
----
-
 ## 我的进度：
 
-### 任务1：磁盘挂载与本地APT仓库
+### 任务1：挂载磁盘
 
-#### 一、在VMware中添加硬盘
+#### 一：在Vmware中添加硬盘
 
-在VMware虚拟机设置中添加两块新硬盘（各20GB），用于后续挂载实验。
+![image](image/image%206.png)
 
-![image.png](image/image%201.png)
+![image](image/image%2026.png)
 
-![image.png](image/image%206.png)
+在虚拟机内操作（假设磁盘为/dev/sdb和/dev/sdc）：
 
-在虚拟机内操作，检查新添加的磁盘：
+检查新添加的磁盘
 
-```bash
+```shell
 lsblk
 ```
 
-可以看到添加成功，出现了 sdb 和 sdc 两块新磁盘。
+可以看到添加成功
 
-![image.png](image/image%2010.png)
+![image](image/image%2022.png)
 
-#### 二、创建第一个磁盘分区并挂载到 /mnt
+2. 创建第一个磁盘的分区（/dev/sdb）
 
-1. 创建分区（假设为/dev/sdb）
-
-```bash
+```shell
 sudo fdisk /dev/sdb
+# fdisk 是 Linux 磁盘分区工具，sudo fdisk /dev/sdb 表示操作你新增的第一块 20G 裸磁盘 sdb，给它创建分区表与可用分区。
 ```
 
-操作步骤：`n` -> `p` -> `1` -> 回车 -> 回车 -> `w`
+操作：n -> p -> 1 -> 回车 -> 回车 -> w
 
-![image.png](image/image%209.png)
+![image](image/image%2031.png)
 
-- 输入 `n` —— New，新建分区
-- 输入 `p` —— primary，创建**主分区**
-- 分区号默认 1，起始扇区、结束扇区全部直接回车，**整块 20G 磁盘只分一个分区**
-- 输入 `w` —— write，**把分区配置写入磁盘并保存退出**
+1. 输入 `n` —— New，新建分区
 
-2. 格式化分区
+2. 输入 `p` —— primary，创建**主分区**（Linux 数据盘首选）
 
-```bash
+3. 分区号默认 1，起始扇区、结束扇区全部直接回车，**整块 20G 磁盘只分一个分区**，占满全部空间
+
+4. 工具提示：成功创建 20G Linux 类型分区 `/dev/sdb1`
+
+5. 输入 `w` —— write，**把分区配置写入磁盘并保存退出**
+
+    - `The partition table has been altered.`：分区表修改完成
+
+    - `Syncing disks.`：同步磁盘，内核识别新分区 `/dev/sdb1`
+
+3. 格式化第一个磁盘
+
+```shell
 sudo mkfs.ext4 /dev/sdb1
 ```
 
-`mkfs.ext4` = make filesystem ext4，给空白分区创建 ext4 文件系统。磁盘分区只是划分空间，必须格式化后才能存放文件、挂载使用。
+`mkfs.ext4` = make filesystem ext4，作用是**给空白分区创建 ext4 文件系统**。 磁盘分区只是划分空间，必须格式化后才能存放文件、挂载使用。
 
-![image.png](image/image%202.png)
+![image](image/image%2027.png)
 
-3. 创建挂载点并挂载
+1. `Creating filesystem with 5242624 4k blocks and 1310720 inodes` 分配 4K 大小的数据块、inode 节点，用于存储文件数据与文件元信息。
 
-```bash
+2. `Filesystem UUID: 077c18a5-b9fd-4e92-8e8d-027cd7ec8424` 生成该分区唯一标识 UUID，
+
+> 挂载时，UUID比直接写 /dev/sdb1 更稳定。
+
+3. `Superblock backups stored on blocks` 超级块备份，ext4 会多处备份分区元数据，磁盘损坏时可恢复。
+
+4. 末尾 4 行 `done` 代表格式化全流程完成：分配组表、写入 inode 表、创建日志、写入超级块信息全部执行完毕。
+
+4. 创建挂载点并挂载
+
+```shell
 sudo mkdir -p /mnt
 sudo mount /dev/sdb1 /mnt
 ```
 
-![image.png](image/image.png)
+![image](image/image.png)
 
-4. 持久化挂载（编辑fstab）
+5. 持久化挂载（编辑fstab）
 
-```bash
+```shell
 echo '/dev/sdb1 /mnt ext4 defaults 0 0' | sudo tee -a /etc/fstab
+# /etc/fstab 是 Ubuntu 系统的开机自动挂载配置文件，系统开机时会自动读取这个文件里所有条目，按规则挂载磁盘分区。 这条命令就是告诉系统：每次开机自动把 /dev/sdb1 挂载到 /mnt
 ```
 
-之前执行的 `sudo mount /dev/sdb1 /mnt` 是**临时挂载**，虚拟机重启后挂载会失效；写入 `/etc/fstab` 后，系统开机自动读取该文件，实现永久挂载。
+![image](image/image%201.png)
 
-![image.png](image/image%205.png)
+之前执行的 `sudo mount /dev/sdb1 /mnt` 是**临时挂载**，虚拟机重启后挂载会失效； 写入 `/etc/fstab` 后，系统开机自动读取该文件，自动把 `/dev/sdb1` 挂载到 `/mnt`，实现永久挂载。
 
-#### 三、创建 /mnt/repository 并下载 MySQL 8.0 包
+#### 二：创建/mnt/repository并下载MySQL 8.0包
 
 1. 创建repository目录
 
-```bash
+```shell
 sudo mkdir -p /mnt/repository
 ```
 
 2. 安装必要的工具
 
-```bash
+```shell
 sudo apt update
 sudo apt install -y wget gnupg2
 ```
 
-> gnupg2（GNU Privacy Guard 2）：GPG 加密签名工具，用于生成、校验软件仓库的数字签名，消除 `apt update` 时的「仓库未签名」警告。
+gnupg2
 
-3. 下载MySQL官方APT仓库配置包
+- 全称：GNU Privacy Guard 2，GPG 加密签名工具；
 
-```bash
+- 用途：生成、校验软件仓库的数字签名，消除执行`apt update`时的`仓库未签名`警告；
+
+- 任务场景：制作本地 APT 仓库时，需要用它签名`Release`元数据文件，系统才能信任本地源并正常安装软件。
+
+3. 下载MySQL官方APT仓库配置包（不安装）
+
+```shell
 cd /mnt/repository
-sudo apt install -y mysql-server-8.0
 ```
 
-![image.png](image/image%207.png)
+```shell
+sudo apt-get install --download-only -y mysql-server-8.0
+# 包会下载到 /var/cache/apt/archives/，再复制到仓库目录
+sudo cp /var/cache/apt/archives/mysql*.deb /mnt/repository/
+```
+
+再下载apt-utils 包
+
+```shell
+sudo apt install -y apt-utils dpkg-dev
+```
 
 4. 生成仓库元数据
 
-```bash
+```shell
 cd /mnt/repository
-sudo apt install -y dpkg-dev
 dpkg-scanpackages --multiversion . /dev/null | gzip -9c > Packages.gz
 apt-ftparchive release . > Release
 ```
 
-![image.png](image/image%2012.png)
+![image](image/image%2029.png)
 
-![image.png](image/image%204.png)
+![image](image/image%2019.png)
 
 5. 添加本地仓库源
 
-```bash
+```shell
 echo "deb file:///mnt/repository ./" | sudo tee /etc/apt/sources.list.d/local-mysql-repo.list
 ```
 
-![image.png](image/image%2011.png)
+![image](image/image%204.png)
 
 6. 更新软件包索引
 
-```bash
+```shell
 sudo apt update
 ```
 
 7. 验证是否成功
 
-```bash
+```shell
 apt-cache policy mysql-server-8.0
 ```
 
-![image.png](image/image%203.png)
+![image](image/image%2023.png)
 
-#### 四、挂载第二个磁盘到 /mnt/repository 并安装 MySQL
+##### 思考：将另外一块磁盘挂载到/mnt/repository，挂载好后思考怎么在磁盘挂载的情况下使用刚刚做好的本地apt仓库安装mysql8.0
 
-**思考：当磁盘挂载到 /mnt/repository 时如何使用本地仓库？**
+解决方案：在挂载前下载包，挂载后使用
 
-有两种解决方案：
+1. 在挂载第二个磁盘之前，先下载所有包到/mnt/repository
 
-**方案A：在挂载前下载包，挂载后使用**
+2. 挂载前备份
 
-1. 在挂载第二个磁盘之前，先下载所有包到 /mnt/repository
-
-2. 创建第二个磁盘的分区和格式化（假设为/dev/sdc）
-
-```bash
-sudo fdisk /dev/sdc
-# 操作：n -> p -> 1 -> 回车 -> 回车 -> w
-sudo mkfs.ext4 /dev/sdc1
+```shell
+sudo cp -a /mnt/repository /tmp/repo-backup
 ```
 
-3. 备份现有 /mnt/repository 的内容
+3. 挂载第二块磁盘
 
-```bash
-sudo cp -a /mnt/repository /tmp/mnt_repository_backup
-```
-
-4. 挂载第二个磁盘到 /mnt/repository
-
-```bash
+```shell
 sudo mount /dev/sdc1 /mnt/repository
 ```
 
-5. 复制备份的内容到新磁盘
+4. 恢复内容
 
-```bash
-sudo cp -a /tmp/mnt_repository_backup/* /mnt/repository/
+```shell
+sudo cp -a /tmp/repo-backup/* /mnt/repository/
 ```
 
-6. 持久化挂载
+5. 重新生成元数据
 
-```bash
-echo '/dev/sdc1 /mnt/repository ext4 defaults 0 0' | sudo tee -a /etc/fstab
-```
-
-7. 确保仓库元数据正确
-
-```bash
+```shell
 cd /mnt/repository
 sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c > Packages.gz
 sudo apt-ftparchive release . > Release
 ```
 
-8. 更新软件包索引并安装MySQL
+6. 更新并安装
 
-```bash
+```shell
 sudo apt update
 sudo apt install -y mysql-server-8.0
 ```
-
-**方案B：动态链接仓库路径**
-
-1. 先挂载磁盘
-
-```bash
-sudo mount /dev/sdc1 /mnt/repository
-```
-
-2. 创建软链接到其他位置存放deb包
-
-```bash
-sudo mkdir -p /var/cache/repository-packages
-sudo ln -s /var/cache/repository-packages /mnt/repository/.deb-cache
-```
-
-3. 下载包到缓存位置
-
-```bash
-cd /var/cache/repository-packages
-sudo apt download mysql-server-8.0 mysql-client-8.0 mysql-common
-```
-
-4. 重新生成仓库元数据
-
-```bash
-cd /mnt/repository
-sudo dpkg-scanpackages --multiversion . /dev/null | gzip -9c > Packages.gz
-sudo apt-ftparchive release . > Release
-```
-
-5. 安装MySQL
-
-```bash
-sudo apt update
-sudo apt install -y mysql-server-8.0
-```
-
----
 
 ### 任务2：MySQL服务管理与systemd
 
@@ -275,6 +249,8 @@ sudo systemctl start mysql
 ```bash
 sudo systemctl status mysql
 ```
+
+![image](image/image%2015.png)
 
 3. 获取MySQL进程PID
 
@@ -294,29 +270,48 @@ pidof mysqld
 ps aux | grep mysql
 ```
 
-4. 通过PID反查进程所属服务
+| 命令 | 优点 | 缺点 |
+|---|---|---|
+| systemctl show mysql -p MainPID | 直接获取服务主 PID，最标准 | 仅限 systemd 托管的服务 |
+| pgrep | 简洁，支持模糊匹配 | 容易匹配到 mysql 客户端进程 |
+| pidof mysqld | 精准匹配后台 mysqld 服务 | 需要记住进程名是 mysqld |
+| ps aux | 信息完整，排错首选 | 输出杂乱，附带 grep 干扰进程 |
 
-```bash
-# 方法1：使用lsof查看进程打开的文件
-sudo lsof -p <PID>
+![image](image/image%208.png)
 
-# 方法2：使用fuser查看进程使用的文件系统
-sudo fuser /var/run/mysqld/mysqld.sock
+##### 思考：通过PID反查进程所属服务
 
-# 方法3：使用systemd-cgls查看cgroup
-systemd-cgls
+- 1：直接传入 PID，一步输出服务名、运行状态、日志；
 
-# 方法4：使用cat查看进程的cgroup信息
-cat /proc/<PID>/cgroup
-
-# 方法5：使用systemctl status查看（最直接）
-systemctl status <PID>
+```shell
+systemctl status 5110
 ```
 
-> **思考：拿到进程PID如何反过来查到进程所属服务？**
->
-> 推荐方法：使用 `systemctl status <PID>`，systemd会自动识别PID所属的服务名称。
-> 或者手动查询：`sudo systemctl list-units --type=service | grep -E "$(cat /proc/<PID>/cgroup | grep -o 'system.slice/.*' | cut -d'/' -f2)"`
+![image](image/image%2010.png)
+
+- 2：读取内核 /proc 虚拟文件
+
+```shell
+cat /proc/5110/cgroup
+```
+
+![image](image/image%203.png)
+
+- 3：全局 cgroup 对照表检索
+
+```shell
+systemd-cgls | grep 5110
+```
+
+![image](image/image%2016.png)
+
+- 4：通过进程打开的文件辅助判断
+
+```shell
+sudo lsof -p 5110
+```
+
+![image](image/image%2022.png)
 
 #### 二、创建自定义systemd服务（定时备份MySQL配置）
 
@@ -350,13 +345,15 @@ echo "MySQL配置备份完成: $DATE"
 EOF
 ```
 
-![image.png](image/image%208.png)
+![image](image/image%2033.png)
 
 2. 设置执行权限
 
 ```bash
 sudo chmod +x /opt/scripts/backup_mysql_config.sh
 ```
+
+![image](image/image%2017.png)
 
 3. 创建systemd服务单元文件
 
@@ -374,6 +371,8 @@ Group=root
 EOF
 ```
 
+![image](image/image%2024.png)
+
 4. 创建systemd定时器单元文件
 
 ```bash
@@ -389,6 +388,8 @@ Persistent=true
 WantedBy=timers.target
 EOF
 ```
+
+![image](image/image%2029.png)
 
 5. 重新加载systemd配置
 
@@ -410,6 +411,8 @@ sudo systemctl status mysql-config-backup.timer
 sudo systemctl list-timers
 ```
 
+![image](image/image%202.png)
+
 8. 手动测试一次服务
 
 ```bash
@@ -417,17 +420,25 @@ sudo systemctl start mysql-config-backup.service
 sudo journalctl -u mysql-config-backup.service
 ```
 
+![image](image/image%207.png)
+
 9. 查看备份结果
 
 ```bash
 ls -la /var/backups/mysql/
 ```
 
-> **思考其他实现方式：**
-> - 方式1：使用 `crontab -e`，添加：`0 * * * * /opt/scripts/backup_mysql_config.sh`
-> - 方式2：使用 at 命令（一次性任务，需要循环调用）
-> - 方式3：使用 anacron（适合笔记本/不常开机的设备）
-> - 方式4：使用第三方工具如 Jenkins/GitLab-CI 进行定时任务
+![image](image/image%205.png)
+
+##### 思考：其他实现方式：
+
+- 方式1：使用 `crontab -e`，添加：`0 * * * * /opt/scripts/backup_mysql_config.sh`
+
+- 方式2：使用 at 命令（一次性任务，需要循环调用）
+
+- 方式3：使用 anacron（适合笔记本/不常开机的设备/最小单位是天，不能做到按小时定时）
+
+- 方式4：使用第三方工具如 Jenkins/GitLab-CI 进行定时任务
 
 #### 三、安装学习 supervisor 工具
 
@@ -438,6 +449,8 @@ sudo apt update
 sudo apt install -y supervisor
 ```
 
+![image](image/image%2018.png)
+
 2. 启动并设置开机自启
 
 ```bash
@@ -445,11 +458,15 @@ sudo systemctl start supervisor
 sudo systemctl enable supervisor
 ```
 
+![image](image/image%208.png)
+
 3. 检查服务状态
 
 ```bash
 sudo systemctl status supervisor
 ```
+
+![image](image/image%2015.png)
 
 4. 查看supervisor配置文件
 
@@ -457,6 +474,8 @@ sudo systemctl status supervisor
 ls -la /etc/supervisor/
 cat /etc/supervisor/supervisord.conf
 ```
+
+![image](image/image%2026.png)
 
 5. 使用supervisor管理一个示例程序
 
@@ -473,6 +492,8 @@ EOF
 chmod +x /opt/scripts/test_program.sh
 ```
 
+![image](image/image%2025.png)
+
 6. 创建supervisor配置文件
 
 ```bash
@@ -488,12 +509,16 @@ user=root
 EOF
 ```
 
+![image](image/image%2030.png)
+
 7. 重新加载supervisor配置
 
 ```bash
 sudo supervisorctl reread
 sudo supervisorctl update
 ```
+
+![image](image/image%206.png)
 
 8. 管理supervisor进程
 
@@ -505,28 +530,32 @@ sudo supervisorctl restart test_program
 sudo supervisorctl tail -f test_program
 ```
 
+![image](image/image%2023.png)
+
+![image](image/image.png)
+
 9. 查看supervisor管理的进程
 
 ```bash
 ps aux | grep test_program
 ```
 
----
+![image](image/image%2012.png)
 
-## 思考：Supervisor 与 systemd 的区别
+##### 思考：supervisor与原生systemd服务的区别
 
 | 特性 | Supervisor | Systemd |
-|------|------------|---------|
+|---|---|---|
 | **设计目的** | 专注于进程管理、监控和自动重启 | 系统初始化和服务管理 |
 | **进程监控** | 监控进程状态，自动重启崩溃进程 | 监控服务状态，但对单个进程监控较弱 |
-| **日志管理** | 内置日志轮转和集中管理 | 依赖journald，日志分散 |
-| **配置方式** | INI格式，简单直观 | Unit文件，功能强大但复杂 |
-| **资源限制** | 支持进程级别的资源限制（CPU、内存） | 支持cgroup资源限制，功能更全面 |
-| **网络管理** | 不支持 | 支持socket激活、网络配置等 |
+| **日志管理** | 内置日志轮转和集中管理 | 依赖 journald，日志分散 |
+| **配置方式** | INI 格式，简单直观 | Unit 文件，功能强大但复杂 |
+| **资源限制** | 支持进程级别的资源限制（CPU、内存） | 支持 cgroup 资源限制，功能更全面 |
+| **网络管理** | 不支持 | 支持 socket 激活、网络配置等 |
 | **依赖管理** | 简单的启动顺序控制 | 复杂的依赖关系管理 |
 | **适用场景** | 单机应用、容器内进程管理 | 系统服务、需要复杂依赖管理的场景 |
 | **学习曲线** | 简单，易于上手 | 功能强大，学习曲线较陡 |
 
-**总结：**
-- **Supervisor**：适合管理单个应用程序进程，特别是需要自动重启、日志管理的场景
-- **Systemd**：适合系统级服务管理，需要复杂的依赖关系、资源控制、网络管理等场景
+- Supervisor：适合管理单个应用程序进程，特别是需要自动重启、日志管理的场景
+
+- Systemd：适合系统级服务管理，需要复杂的依赖关系、资源控制、网络管理等场景
