@@ -7,6 +7,10 @@ resources/_gen/
 # Hugo build lock
 .hugo_build.lock
 
+# Themes (except submodule)
+themes/
+!themes/PaperMod
+
 # Editor and IDE files
 .obsidian/
 .vscode/
@@ -29,8 +33,16 @@ node_modules/
 # Temporary files
 *.tmp
 *.temp
+*.base
 
 # Compiled files
 *.o
 *.pyc
 *.pyo
+
+# Environment variables
+.env
+.env.*
+
+# Backup files
+*.bak
