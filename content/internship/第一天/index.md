@@ -14,22 +14,18 @@ summary: "Linux / Ubuntu 基础与系统安装认知"
 ## 当日任务：
 
 1. 根据学习目标展开学习
-
 2. 实操任务：
-
-    - 本地虚拟机实操安装Rocky Linux 9.8系统作为后续学习本地测试环境对比学习
-
-    - 使用本地虚拟机实操安装ubuntu22.04系统（要求内核版本6.8.x）作为后续学习主要本地测试环境（熟悉ubuntu安装界面所有选项配置项）
-
-    - 丢失root密码该如何重置
+   - 本地虚拟机实操安装Rocky Linux 9.8系统作为后续学习本地测试环境对比学习
+   - 使用本地虚拟机实操安装ubuntu22.04系统（要求内核版本6.8.x）作为后续学习主要本地测试环境（熟悉ubuntu安装界面所有选项配置项）
+   - 丢失root密码该如何重置
 
 ## 我的进度：
 
-### 安装
+### 安装：
 
 #### Rocky Linux 9.8
 
-点击下载Rocky Linux 9.8
+[rockylinux.org/download](https://rockylinux.org/download) 点击下载Rocky Linux 9.8
 
 ![filename](image/filename%205.png)
 
@@ -57,6 +53,8 @@ Vmware中安装
 
 ![image](image/image%2014.png)
 
+自己视情况而设置
+
 ![image](image/image%2011.png)
 
 ![image](image/image%209.png)
@@ -64,6 +62,8 @@ Vmware中安装
 ![image](image/image%203.png)
 
 之后都是默认
+
+启动虚拟机
 
 虚拟机配置
 
@@ -76,13 +76,13 @@ Vmware中安装
 配置允许远程ssh登录
 
 ```shell
-# 1. 修改 SSH 服务配置文件
+#1. 修改 SSH 服务配置文件
 vi /etc/ssh/sshd_config
-# 找到下面两行，修改为如下值：
-# PermitRootLogin yes
-# PasswordAuthentication yes
-# 若行前有#注释符，必须删掉#才会生效。
-# 2. 重启 sshd 服务加载新规则
+#找到下面两行，修改为如下值：
+#PermitRootLogin yes
+#PasswordAuthentication yes
+#若行前有#注释符，必须删掉#才会生效。
+#2. 重启 sshd 服务加载新规则
 systemctl restart sshd
 ```
 
@@ -100,7 +100,7 @@ systemctl restart sshd
 
 ![filename](image/filename%202.png)
 
-按住 `ctrl`+`alt`+`F5` 进入命令行模式
+> 技巧：可以按住`ctrl`+`alt`+`F5`进入命令行模式
 
 修改内核为内核版本 6.8.x
 
@@ -118,7 +118,7 @@ sudo reboot
 
 步骤 1：重启虚拟机，调出 GRUB 引导菜单
 
-开机时按 `Esc` ，出现系统内核选项界面。
+开机时按`Esc` ，出现系统内核选项界面。
 
 步骤 2：修改内核启动参数
 
@@ -133,7 +133,7 @@ sudo reboot
 进入紧急模式，按 `Enter` 键进入 shell 提示符。现在，确保重新挂载了具有读写权限的 `sysroot` 目录。默认情况下，它以只读模式安装，指示为 `ro`。
 
 ```bash
-# 确认当前是只读ro
+#确认当前是只读ro
 mount | grep sysroot
 ```
 
@@ -181,13 +181,13 @@ exec /lib/systemd/systemd
 
 ##### Ubuntu 22.04
 
-进入 GRUB 菜单后，使用箭头键导航到 Ubuntu 条目，然后按"e"键编辑 grub 参数。
+进入 GRUB 菜单后，使用箭头键导航到 Ubuntu 条目，然后按“e”键编辑 grub 参数。
 
 ![image](image/image%204.png)
 
 向下滚动，直到到达以 'linux 开头的行，整行在下面突出显示。
 
-将代码行中的 "ro quiet splash $vt_handoff" 替换为 "rw init=/bin/bash"，这样做的目的是利用 "rw" 前缀来实现对根文件系统的读写权限设置。
+将代码行中的 "ro quiet splash $vt_handoff" 替换为 "rw init=/bin/bash"，这样做的目的是利用 "rw" 前缀来实现对根[文件系统](https://cloud.tencent.com/developer/techpedia/1993?from_column=20065&from=20065)的读写权限设置。
 
 ![image](image/image%202.png)
 
