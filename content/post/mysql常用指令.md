@@ -2,6 +2,8 @@
 date = '2026-03-26T08:43:23+08:00'
 draft = false
 title = 'Mysql常用指令'
+tags = ['MySQL', '数据库', 'SQL']
+summary = '整理 MySQL 数据库、表、用户、查询和备份等日常管理中常用的命令。'
 +++
 
 # MySQL 常用指令(别忘了输入分号)

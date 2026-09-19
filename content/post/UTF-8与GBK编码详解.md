@@ -3,6 +3,7 @@ date = '2026-08-04T10:30:00+08:00'
 draft = false
 title = 'UTF-8 与 GBK 编码详解：从乱码到 Windows 代码页'
 tags = ['编码', 'Windows', '乱码']
+summary = '从乱码问题出发，介绍 UTF-8、GBK、Windows 代码页以及文件编码转换的基本原理。'
 +++
 
 # UTF-8 与 GBK 编码详解：从乱码到 Windows 代码页

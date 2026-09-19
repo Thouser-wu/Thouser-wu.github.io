@@ -2,6 +2,8 @@
 date = '2026-05-25T19:51:51+08:00'
 draft = false
 title = 'WSL2相关指令'
+tags = ['WSL2', 'Windows', 'Linux', '虚拟化']
+summary = '整理 WSL2 的安装、发行版管理、启动停止和日常使用命令。'
 +++
 
 # WSL2 相关指令

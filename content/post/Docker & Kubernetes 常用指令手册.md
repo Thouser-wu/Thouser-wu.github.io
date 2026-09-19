@@ -2,6 +2,9 @@
 date = '2026-03-25T18:58:08+08:00'
 draft = false
 title = 'Docker & Kubernetes 常用指令手册'
+slug = 'docker-kubernetes-cheatsheet'
+tags = ['Docker', 'Kubernetes', '容器', 'Linux']
+summary = '整理 Docker 服务管理、镜像、容器、网络以及 Kubernetes 常用操作指令，方便日常运维查阅。'
 +++
 ## 1. Docker 服务管理
 ### 启动与状态

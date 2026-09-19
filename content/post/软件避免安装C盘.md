@@ -2,6 +2,8 @@
 date = '2026-05-13T19:20:33+08:00'
 draft = false
 title = '软件避免安装C盘'
+tags = ['Windows', '磁盘管理', 'Ollama']
+summary = '介绍如何避免软件和模型文件挤占 C 盘，并以 Ollama 为例说明迁移和配置方法。'
 +++
 
 # 软件避免安装C盘，Ollama避C盘完整安装迁移教程

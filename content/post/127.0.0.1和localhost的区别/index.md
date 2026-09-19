@@ -2,6 +2,8 @@
 date = '2026-07-03T17:03:25+08:00'
 draft = false
 title = '127.0.0.1和localhost的区别'
+tags = ['网络', 'TCP/IP', 'Windows']
+summary = '比较 127.0.0.1 与 localhost 的联系和区别，说明域名解析、回环地址及常见排查场景。'
 +++
 
 #### 127.0.0.1和localhost的区别：

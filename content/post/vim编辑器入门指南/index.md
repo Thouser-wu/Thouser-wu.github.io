@@ -2,6 +2,8 @@
 date = '2026-07-24T10:00:00+08:00'
 draft = false
 title = 'Vim 编辑器入门'
+tags = ['Vim', 'Linux', '文本编辑器']
+summary = '介绍 Vim 的工作模式、常用编辑命令以及 Linux 环境下的基本使用方法。'
 +++
 
 ## 什么是 Vim？
